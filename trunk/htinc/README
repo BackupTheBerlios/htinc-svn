@@ -1,8 +1,20 @@
 		 HTML Include
 		 ============
-		 Version 0.10
 
 HTML Include handles Include files in HTML Source files. It checks
 the given source file for certain Tags (special-styled comments) and
 replace the content of the include area, if the content in the
 associated include file was changed.
+
+The full user manual is 'htinc.txt'
+
+
+                Obtaining
+                =========
+
+HTML Included is hosted at BerliOS, at
+http://developer.berlios.de/projects/htinc/
+
+The home page is http://htinc.berlios.de
+
+The Author is Robert Lange <robert.lange@s1999.tu-chemnitz.de>

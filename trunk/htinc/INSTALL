@@ -129,6 +129,12 @@ package recognizes.
    You can compile the package with debug support with the option
 '--enable-debug'.
 
+   The switch '--disable-optimize' will build the package without
+compiler optimization enabled. This saves some compiling time on the
+cost of a not optimized executable. You don't want to do this, unlike
+you are a developer and want to shorten the time spend on
+recompilation.
+
 Specifying the System Type
 ==========================
 
