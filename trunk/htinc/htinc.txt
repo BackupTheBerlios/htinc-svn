@@ -8,7 +8,7 @@
 
 HTML Include solves the problem that the Hypertext Markup Language doesn't
 know a command for including other files into a source file.
-So if use some pieces of source code (i. e. Hypertext fractions)
+So if you use some pieces of source code (i. e. Hypertext fractions)
 in more than one file than you need to copy the piece into every single file.
 And if you change something, than you have to manually modify all files
 (that is, if you do not have any type of special editor which handles
