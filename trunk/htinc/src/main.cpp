@@ -3,19 +3,13 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 12.10.2k2
- last Modification (UTC): $LastChangedDate$
+ last Modification: $LastChangedDate$
  Function: examines the Command Line Arguments, calls the Examine Object
            with the given file and process its return value
 
- Command Line Parameters: see help text (in main.h)
+ Command Line Parameters: see help text (in globals.cpp)
 
- Return Codes:
-    0: OK
-    1: wrong parameters or options
-    2: error opening a file
-    3: bad file
-    4: Start Tag lacks an include file name
-   99: internal (i. e. unexpected) error
+ Return Codes: see structs.h
 
 
     This program is free software; you can redistribute it and/or modify
@@ -39,8 +33,8 @@
 #include <string>
 
 #include "config.h"         // Settings from configure
-#include "structs.h"        // including the return struct
-#include "main.h"           // Header
+#include "structs.h"        // including the return struct und return values
+#include "globals.h"        // Settings and Command Line Options
 #include "examine.h"        // Header for the examine object
 #include "utils/cmdargs.h"  // der command line parser
 
@@ -73,13 +67,13 @@ int main(int argc, char **argv) {
     // help text wanted?
     if ( cl.is_option(setup::Option_Help_s) ) {
       cout << setup::Helptext;
-      return 0;
+      return structures::exit_codes(structures::NO_ERR);
     }
 
     // version wanted?
     if ( cl.is_option(setup::Option_Version_s) ) {
       cout << setup::Copyright << endl;
-      return 0;
+      return structures::exit_codes(structures::NO_ERR);
     }
 
     // Option Quiet found?
@@ -96,7 +90,8 @@ int main(int argc, char **argv) {
       // too few or too many parameters
       cerr << "Error: No or too many input files!\n"
 	   << "Help text with \"htinc -h\"\n\n";
-      return 1;           // Error: wrong parameters or options
+      // Error: wrong parameters or options
+      return structures::exit_codes(structures::WRONG_PARAS);
     }
 
     // Option Include not found?
@@ -104,7 +99,8 @@ int main(int argc, char **argv) {
       // no
       cerr << "Error: option \"" << setup::Option_Include_s << "\" not found!\n"
 	   << "Help text with \"htinc -h\"\n\n";
-      return 1;           // Error: wrong parameters or options
+      // Error: wrong parameters or options
+      return structures::exit_codes(structures::WRONG_PARAS);
     }
 
     // get Option Include argument
@@ -114,7 +110,8 @@ int main(int argc, char **argv) {
       cerr << "Error: Missing Include directory after option \""
 	   << setup::Option_Include_s << "\"!\n"
 	   << "Help text with \"htinc -h\"\n\n";
-      return 1;           // Error: wrong parameters or options
+      // Error: wrong parameters or options
+      return structures::exit_codes(structures::WRONG_PARAS);
     }
 
     // everything OK!
@@ -141,44 +138,51 @@ int main(int argc, char **argv) {
   case structures::OK:
     if (setup::Message_Level >= structures::DEBUG)    // issue Finish
       cout << "Finished\n";
-    return 0;    // everythink OK
+    return structures::exit_codes(structures::NO_ERR); // No Error
     break;
   case structures::ERR_OPEN_FILE:  // file could not be opened
      cerr << "Error: invalid input file; unable to open file "
           << dateiname << "!\n\n";
-     return 2;          // Error: file could not be opened
+     // Error: file could not be opened
+     return structures::exit_codes(structures::ERR_OPEN);
      break;
   case structures::ERR_READFILE:  // file could not be read
      cerr << "Error: unable to read from input file "
           << dateiname << "!\n\n";
-     return 3;          // Error: bad file
+     // Error: bad file
+     return structures::exit_codes(structures::BAD_FILE);
      break;
   case structures::ERR_WRITEFILE:  // could not write to file
      cerr << "Error: unable to write to file "
           << dateiname << "!\n\n";
-     return 3;          // Error: bad file
+     // Error: bad file
+     return structures::exit_codes(structures::BAD_FILE);
      break;
   case structures::ERR_MISSING_INCNAME:  // Include Tag lacks a file name
     cerr << "Error: Include-Tag in line "<< retval.line
 	 << " lacks an file name!\n\n";
-     return 4;          // Error: Tags invalid
+    // Error: Tags invalid
+     return structures::exit_codes(structures::NO_INC_NAME);
      break;
   case structures::ERR_MISSING_ENDTAG:  // no End Tag
     cerr << "Error: No End-Tag found for Include-Tag in line "<< retval.line
 	 << "!\n\n";
-     return 4;          // Error: Tags invalid
+    // Error: Tags invalid
+     return structures::exit_codes(structures::NO_INC_NAME);
      break;
   case structures::ERR_LOADING_INC:  // Include could not be opened
      cerr << "Error: unable to load include File "
           << retval.text << "!\n\n";
-     return 2;          // Error: file could not be opened
+     // Error: file could not be opened
+     return structures::exit_codes(structures::ERR_OPEN);
      break;
 
   default:  // unexpected error
     cerr << "internal Error encountered!"
 	 << "\n(unexpected return value from examine object)\n"
 	 << "Please contact programmer about this issue.\n";
-    return 99;   // internal error
+    // internal error
+    return structures::exit_codes(structures::BAKA);
     break;
   } // End switch
 

@@ -3,7 +3,7 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 13.10.2k2
- last Modification (UTC): $LastChangedDate$
+ last Modification: $LastChangedDate$
  Function: Declaration of globally used structures and enumerations
  
 
@@ -52,5 +52,16 @@ namespace structures {
     DEBUG = 100
   };
 
-} // End namespace
+  // Return Codes
+  enum exit_codes {
+    NO_ERR = 0,      // No error
+    WRONG_PARAS=1,   // wrong parameters or options
+    ERR_OPEN=2,      // error opening a file
+    BAD_FILE=3,      // bad file
+    NO_INC_NAME=4,   // Start Tag lacks an include file name
+    BAKA=99          // internal (i. e. unexpected) error
+  };
+
+} // End namespace structures 
+
 #endif
