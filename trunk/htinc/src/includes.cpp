@@ -3,7 +3,7 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 13.10.2k2
- last Modification (UTC): $LastChangedDate$
+ last Modification: $LastChangedDate$
  Function: check if Include file was changed and replace the Include in
            this chase
 
@@ -23,13 +23,7 @@
 #include "includes.h"
 #include "config.h"  // Settings from configure
 #include "auxfunc.h" // for copyfile function
-
-
-// get Settings from main.h
-namespace setup {
-  extern const std::string Include_Tag_End; // tag's ending
-  extern structures::msg_level Message_Level;        // the type of output
-}
+#include "globals.h" // get Settings
 
 
 

@@ -1,13 +1,12 @@
-/* Name: ''main.h''
+/* Name: ''globals.cpp''
   Project: HTML Include
  Copyright (C) 2002 MadDog/Robert Lange
 
- Created: 12.10.2k2
- last Modification (UTC): $LastChangedDate$
- Function: Header for main.cpp; Copyright, Helptext and Name of Command Options
+ Created: 25.03.2k5 (from main.h)
+ last Modification: $LastChangedDate$
+ Function: Globals and Constants;
+           Copyright, Helptext and Name of Command Options
            Also some settings
- Remark: This file is only to be included by main.h; other modules can
-         get access to variables defined here by using the extern directive
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,15 +19,15 @@
     GNU General Public License for more details.
 */
 
-#include <string>    // needed for setup's
-
+#include "config.h"         // Settings from configure
+#include "globals.h"        // Header
 
 namespace setup {  // Messages and Settings
 
 
 // Copyright message
 const char* const Copyright =
-"             " PACKAGE_STRING " - (C) 2002 MadDog/Robert Lange\n"
+"         " PACKAGE_STRING " - (C) 2002,2005 MadDog/Robert Lange\n"
 "      robert.lange@s1999.tu-chemnitz.de, Command Line Parser by Jan Langer";
 
 
@@ -68,11 +67,11 @@ const char* const Option_Include_l = "-inc";
 
 
 // HTML-Tags for the Include
-extern const std::string Include_Tag_Start_s = "<!--INCLUDE=\""; // tag's beginning
-extern const std::string Include_Tag_Start_e = "\"-->"; // tag's ending
+const std::string Include_Tag_Start_s = "<!--INCLUDE=\""; // tag's beginning
+const std::string Include_Tag_Start_e = "\"-->"; // tag's ending
   // Between tag's beginning and ending: filename of the include
   // Example: <!--INCLUDE="greetings.inc"-->
-extern const std::string Include_Tag_End = "<!--ENDINC-->"; // complete tag
+const std::string Include_Tag_End = "<!--ENDINC-->"; // complete tag
 // Remark: Start/End - Tags need to be placed on a separate line
 
 

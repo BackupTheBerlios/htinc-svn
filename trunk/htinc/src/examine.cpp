@@ -3,7 +3,7 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 12.10.2k2
- last Modification (UTC): $LastChangedDate$
+ last Modification: $LastChangedDate$
  Function: loads the file into memory and search for Include Start Tags,
            passes the name of found include tags and the position to
 	   the Includes Object
@@ -26,14 +26,8 @@
 #include "config.h"  // Settings from configure
 #include "examine.h"
 #include "auxfunc.h" // for copyfile function
+#include "globals.h" // get Settings
 
-
-// get Settings from main.h
-namespace setup {
-  extern const std::string Include_Tag_Start_s; // tag's beginning
-  extern const std::string Include_Tag_Start_e; // tag's ending
-  extern structures::msg_level Message_Level;        // the type of output
-}
 
 // *** Constructor ***
 examine::examine(const std::string &incdir) : inc_(incdir),  // Init Include Object

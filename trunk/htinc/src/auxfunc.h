@@ -3,7 +3,7 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 13.10.2k2
- last Modification (UTC): $LastChangedDate$
+ last Modification: $LastChangedDate$
  Function: auxiliary template functions
            copyfile - copies a file into an container
 

@@ -3,7 +3,7 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 12.10.2k2
- last Modification (UTC): $LastChangedDate$
+ last Modification: $LastChangedDate$
  Function: Declaration of Examine Object
 
     This program is free software; you can redistribute it and/or modify
