@@ -6,5 +6,5 @@ docdir = $(datadir)/doc/$(PACKAGE)
 
 # include in distribution
 # and install to docdir
-dist_doc_DATA = history.txt htinc.txt \
+dist_doc_DATA = htinc.txt \
                 ../README ../NEWS
