@@ -3,7 +3,7 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 12.10.2k2
- last Modification (UTC): $Date: 2002/11/03 17:38:03 $
+ last Modification (UTC): $LastChangedDate$
  Function: examines the Command Line Arguments, calls the Examine Object
            with the given file and process its return value
 
@@ -38,7 +38,8 @@
 #include <iostream>
 #include <string>
 
-#include "structs.h"    // including the return struct
+#include "config.h"         // Settings from configure
+#include "structs.h"        // including the return struct
 #include "main.h"           // Header
 #include "examine.h"        // Header for the examine object
 #include "utils/cmdargs.h"  // der command line parser

@@ -3,7 +3,7 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 13.10.2k2
- last Modification (UTC): $Date: 2002/11/03 17:38:03 $
+ last Modification (UTC): $LastChangedDate$
  Function: check if Include file was changed and replace the Include in
            this chase
 
@@ -21,6 +21,7 @@
 // includes
 #include <fstream>
 #include "includes.h"
+#include "config.h"  // Settings from configure
 #include "auxfunc.h" // for copyfile function
 
 

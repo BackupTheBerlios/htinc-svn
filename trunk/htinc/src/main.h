@@ -3,7 +3,7 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 12.10.2k2
- last Modification (UTC): $Date: 2002/11/03 17:38:03 $
+ last Modification (UTC): $LastChangedDate$
  Function: Header for main.cpp; Copyright, Helptext and Name of Command Options
            Also some settings
  Remark: This file is only to be included by main.h; other modules can
@@ -28,18 +28,16 @@ namespace setup {  // Messages and Settings
 
 // Copyright message
 const char* const Copyright =
-"             HTML Include 0.10 - (C) 2002 MadDog/Robert Lange\n"
+"             " PACKAGE_STRING " - (C) 2002 MadDog/Robert Lange\n"
 "      robert.lange@s1999.tu-chemnitz.de, Command Line Parser by Jan Langer";
 
 
 // Help text
-// FORMULATE !!!!
 const char* const Helptext =
 "HTML Include handles Include files in HTML Source files. It checks\n"
 "the given source file for Start and End Tags (special-styled comments) and\n"
 "replace the content of the embraced area with the content in the\n"
 "associated include file, if the content differs.\n"
-
 "\n"
 "Usage: htinc [filename|-h|-v] -i include_dir {-q}\n"
 "-h/--help - shows this help screen\n"
@@ -50,7 +48,11 @@ const char* const Helptext =
 "-i/-inc - directory (relative to current directory) where the include\n"
 "          files should be searched (with slash at the end)\n"
 "\n"
-"Example: htinc index.html -i ../includes/\n";
+"Example: htinc index.html -i ../includes/\n"
+"\n"
+"Send bug reports to: " PACKAGE_BUGREPORT
+"\n"
+;
 
 // Command Line Options
 const char* const Option_Help_l = "--help"; // Help

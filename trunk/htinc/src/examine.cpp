@@ -3,7 +3,7 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 12.10.2k2
- last Modification (UTC): $Date: 2002/11/03 17:38:03 $
+ last Modification (UTC): $LastChangedDate$
  Function: loads the file into memory and search for Include Start Tags,
            passes the name of found include tags and the position to
 	   the Includes Object
@@ -22,6 +22,8 @@
 // includes
 #include <fstream>   // file stream
 #include <iostream>  // for printing debug messages
+
+#include "config.h"  // Settings from configure
 #include "examine.h"
 #include "auxfunc.h" // for copyfile function
 

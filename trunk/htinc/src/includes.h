@@ -3,7 +3,7 @@
  Copyright (C) 2002 MadDog/Robert Lange
 
  Created: 13.10.2k2
- last Modification (UTC): $Date: 2002/11/03 17:38:03 $
+ last Modification (UTC): $LastChangedDate$
  Function: Declaration of Includes Object
  
 
