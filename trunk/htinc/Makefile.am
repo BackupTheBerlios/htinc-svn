@@ -1,5 +1,7 @@
 # Makefile template
 
 
-# just build the subdirectory src
-SUBDIRS = src
+# just mention the subdirectories
+# src: the build directory
+# doc: Documentations
+SUBDIRS = src doc
