@@ -4,19 +4,20 @@
 
 # *** Initialization
 # Autoconf
-AC_INIT(HTML Include, 0.10DEVEL, robert.lange@s1999.tu-chemnitz.de , htinc)
+AC_INIT(HTML Include, 0.10.1devel, robert.lange@s1999.tu-chemnitz.de, htinc)
 # where to put and find the temporary configuration files
 AC_CONFIG_AUX_DIR(config)
 # Autoconf Version not below:
 AC_PREREQ(2.59)
-# Automake
-AM_INIT_AUTOMAKE
+# Automake: create distribution with bzip2, no GNU program
+AM_INIT_AUTOMAKE(dist-bzip2 no-dist-gzip foreign)
 
 # *** Some Configurations
 # some file that is in the package's source directory
 AC_CONFIG_SRCDIR(src/examine.h)
 # set CXXFLAGS for C++ compiler manually (to avoid debug switch -g)
-AC_SUBST(CXXFLAGS, -O2)
+# all warnings enabled
+AC_SUBST(CXXFLAGS, "-Wall -pedantic -ansi")
 
 # *** Checks for programs.
 # C++ Compiler
@@ -24,26 +25,36 @@ AC_PROG_CXX
 # Install Program
 AC_PROG_INSTALL
 
+# *** Add Debug Option for Configure
+AC_ARG_ENABLE(debug,
+   [  --enable-debug    Compile with debugging support],
+   [case "${enableval}" in
+     yes) debug=true ;;
+     no)  debug=false ;;
+     *) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
+   esac],[debug=false])
+AM_CONDITIONAL(DEBUG, test x$debug = xtrue)
+
+
+
+
 # Checks for libraries.
 # none
-
 # Checks for header files.
 # none
-
 # *** Checks for typedefs, structures, and compiler characteristics.
 # none
 #AC_C_CONST
 #AC_C_INLINE
 #AC_TYPE_SIZE_T
-
 # *** Checks for library functions.
-
+# none
 
 # *** outputting files
 # place configuration items in this file
 AC_CONFIG_HEADER([src/config.h])
 # automake Makefiles
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile])
 
 # do output
 AC_OUTPUT
