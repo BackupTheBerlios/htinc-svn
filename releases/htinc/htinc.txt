@@ -1,0 +1,208 @@
+			 HTML Include
+			 ============
+			 Version 0.10
+
+
+		      Short Description
+		      *****************
+
+HTML Include solves the problem that the Hypertext Markup Language doesn't
+know a command for including other files into a source file.
+So if use some pieces of source code (i. e. Hypertext fractions)
+in more than one file than you need to copy the piece into every single file.
+And if you change something, than you have to manually modify all files
+(that is, if you do not have any type of special editor which handles
+this for you).
+But now you can delegate this task to HTML Include which checks
+the given source file for certain Tags (special-styled comments) and
+replace the content of the include area, if the content in the
+associated include file was changed.
+
+
+                          License
+		          *******
+
+HTML Include is put under the GNU General Public License:
+
+    HTML Include
+    Copyright (C) 2002 Robert Lange
+    robert.lange@s1999.tu-chemnitz.de
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+The full-length GNU General Public License can be found in the file COPYING.
+
+
+		     Building HTML Include
+		     *********************
+
+For Linux or DJGPP (see credits) the compilation can be started by simply
+typing 'make' (only if the appropiate files are present, of course).
+The Environment will be autmatically  determined by the return from the
+'uname' command: Linux for 'Linux', otherwise DJGPP.
+
+
+Target Names:
+Other targets are issued by typing 'make targetname', e. g. 'make opt'.
+
+debug: build HTML Include with Debug-Support
+opt: build HTML Include with optimization and strips it
+install: installs HTML Include
+	 installation dir: Linux - ~/bin/
+		           DJGPP - C:/dienst/
+clean: removes object files
+bakclean: removes object files and the backup files
+ultraclean: removes object files, backup files and the result file
+
+
+Programs needed for building HTML Include:  make, bash, GCC version 3
+If you want to use the targets 'clean', 'bakclean' or 'ultraclean': rm
+And for the target 'install': cp
+
+If you are familiar with the matter, then you can customize most of make's
+behavior by modifying the file 'Makefile.def'.
+
+
+
+		    How to use HTML Include
+		    ***********************
+
+HTML Include needs two arguments: the name of the source file and the
+include directory, where the Include files should be searched.
+Assume you want to update the file 'introduction.html' and your
+include files are located in a sub-directory called 'inc_files'.
+Then the call for HTML Include would be as following:
+"htinc -i inc_files/ introduction.html"
+Keep in mind that in this case the program has to be started from the
+directoy containing the source file, because the Include directory is
+assumed relative to the current directory and not the directory
+containing the source file.
+Another point is that one cannot emit the trailing slash in 
+'inc_files/' because HTML Include only takes this include directory and
+the include file name (as in the source file), concatenate them both
+and then opens the resulting file.
+
+
+			     The Tags
+			     ********
+
+Now we can start HTML Include, but the structure of the source files
+is still unclear:
+
+Every single Include in the source file is embraced by a set of tags:
+HTML Comments of an defined format.
+At the beginning (i. e. before the include file) stands the Start Tag
+and after the Include's content stands the End Tag.
+
+Here is a very short example of an source file with an Include:
+----------------------------
+<!--INCLUDE="body.inc"-->
+the content stands here
+<!--ENDINC-->
+----------------------------
+
+The Start Tag consist of two parts: '<--INCLUDE="' and '"-->'
+If this two parts are found then the text between them is parsed
+as the name of the include file (here: 'body.inc').
+The include file is finished by the End Tag: '<!--ENDINC-->'
+
+Some remarks:
+- The Tags have to stand on separate lines
+- No modifications (e. g. inserted spaces, other spelling) are allowed
+- Every Include file need a Start Tag and an End Tag
+- No nesting of include files is supported; e. g. this is not allowed
+  (or will at least not work as intended):
+----------------------------
+<!--INCLUDE="html_skeleton.inc"-->
+Header
+<!--INCLUDE="body.inc"-->
+  Body's content
+<!--ENDINC-->
+End of Header
+<!--ENDINC-->
+----------------------------
+
+
+
+		       Tricks, no Treats
+		       *****************
+
+It is of course possible to use paths (relative to the Include Directory
+given on the command line) as Include Names, if one want to structure
+the used Include files over several directories.
+
+If you want to use other Tags formats, then just edit the file 'main.h'
+to suit your needs before compiling HTML Include.
+
+
+			Program Options
+			***************
+
+Usage: htinc [filename|-h|-v] -i include_dir {-q}
+
+
+filename: the source file which should be processed
+
+-h/--help: shows the help screen and exits
+
+-v/--version: prints version and exits
+
+-q/-quiet: prints only error messages
+
+-d/-debug: enable debug messages
+
+-i/-inc include_dir: directory (relative to current directory) where
+	  the include files should be searched (with slash at the end)
+
+
+Example: "htinc index.html -i ../includes/"
+This would process the source file index.html and look for Include files
+in the directory "../includes". E.g. one include file is named "copyrigt.inc".
+Then the program would try to open the file "../includes/copyright.inc" from
+the current directory (where the program was started, not necessary the
+directory where the source file is located).
+
+
+				Return Codes
+				************
+
+This are the Exit-Codes returned by HTML Include.
+
+    0: No Errors
+    1: wrong command line parameters or options
+    2: error opening a file (source file or include file)
+    3: bad file (source file or include file)
+    4: Start Tag lacks an include file name
+   99: internal (i. e. unexpected) error
+
+
+			       Credits
+			       *******
+
+The Author can be reached by mailing to robert.lange@s1999.tu-chemnitz.de
+Questions, Proposals, something else? Just write me.
+
+The command line parser object is (C) by Jan Langer (Jan@Langernetz.de).
+
+The Binary Version for DOS can be compiled with DJGPP 3.0.3.
+DJGPP can be found here: http://www.delorie.com/djgpp/
+
+The idea of the Include file handling orginates from the program
+HTML EDITOR PHASE 5² (C) Ulli Meybohm (www.meybohm.de/htmledit/); an
+'IDE' for editing Hypertext Markup code.
+
+
+
+last modified (UTC): $Date: 2002/11/03 17:38:03 $
