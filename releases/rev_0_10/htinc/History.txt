@@ -1,9 +1,0 @@
-                      HTML Include History
-                      ====================
-
-Version 0.10
-   - Imported into BerliOS' SVN
-
-
-
-last modified (UTC): $Date: 2002/11/03 17:38:03 $
