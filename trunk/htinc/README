@@ -1,0 +1,8 @@
+		 HTML Include
+		 ============
+		 Version 0.10
+
+HTML Include handles Include files in HTML Source files. It checks
+the given source file for certain Tags (special-styled comments) and
+replace the content of the include area, if the content in the
+associated include file was changed.
