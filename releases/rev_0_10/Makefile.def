@@ -1,0 +1,69 @@
+## Makefile.def for DJGPP/DOS and Linux
+## Function: general parameters for the Makefile
+##     The used operating system is determined by the return of
+##     the 'uname' command: Linux == Linux, DJGPP else
+## Copyright (C) 2002 MadDog/Robert Lange
+##  This program is free software; you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation; either version 2 of the License, or
+##  (at your option) any later version.
+
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+
+
+# Shell
+SHELL = bash
+
+## check OS
+ifeq ($(shell uname 2> /dev/null),Linux)
+   ARCH = Linux
+else
+   ARCH = DJGPP
+endif
+
+
+## Compilername
+ifeq ($(ARCH),Linux)  	## Linux
+   CXX= g++
+else			## DJGPP
+   CXX= gpp
+endif
+
+## and Compilerswitches
+CXXFLAGS=-Wall -pedantic -ansi
+
+
+## remove - program
+RM = rm -f
+## copy - program
+CP = cp
+
+
+## additional includes
+CXXINCLUDES=
+## linker flags
+LDFLAGS  =
+## linker filter
+ifeq ($(ARCH),Linux)	## Linux
+   LDFILTER = | c++filt
+else			## DJGPP
+   LDFILTER = | cxxfilt
+endif
+## libs
+LIBS     = 
+
+## directory where the binary goes (target install)
+ifeq ($(ARCH),Linux)	## Linux
+   INSTALLDIR = ~/bin/
+else			## DJGPP
+   INSTALLDIR = c:/dienst
+endif
+## name of the result file
+ifeq ($(ARCH),Linux)	## Linux
+   RESULTFILE = htinc
+else			## DJGPP
+   RESULTFILE = htinc.exe
+endif
