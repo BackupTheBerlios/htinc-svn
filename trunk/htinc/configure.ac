@@ -27,13 +27,24 @@ AC_PROG_INSTALL
 
 # *** Add Debug Option for Configure
 AC_ARG_ENABLE(debug,
-   [  --enable-debug    Compile with debugging support],
+   AS_HELP_STRING([--enable-debug], [Compile with debugging support]),
    [case "${enableval}" in
      yes) debug=true ;;
      no)  debug=false ;;
      *) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
    esac],[debug=false])
 AM_CONDITIONAL(DEBUG, test x$debug = xtrue)
+
+
+# *** Add Disable Optimize Option for Configure
+AC_ARG_ENABLE(optimize,
+   AS_HELP_STRING([--disable-optimize], [Compile without Optimization]),
+   [case "${enableval}" in
+     yes) optimize=true ;;
+     no)  optimize=false ;;
+     *) AC_MSG_ERROR(bad value ${enableval} for --enable-optimize) ;;
+   esac],[optimize=true])
+AM_CONDITIONAL(OPTIMIZE, test x$optimize = xtrue)
 
 
 
