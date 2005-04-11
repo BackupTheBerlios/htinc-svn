@@ -33,21 +33,10 @@ namespace setup {  // Messages and Settings
 // Copyright message
 extern const char* const Copyright;
 
-// Help text
-extern const char* const Helptext;
+// Default Include Directory: current dir
+extern const char* const Default_Inc_Dir;
 
-// Command Line Options
-extern  const char* const Option_Help_l;
-extern  const char* const Option_Help_s;
-extern  const char* const Option_Version_s;
-extern  const char* const Option_Version_l;
-extern  const char* const Option_Quiet_s;
-extern  const char* const Option_Quiet_l;
-extern  const char* const Option_Debug_s;
-extern  const char* const Option_Debug_l;
-extern  const char* const Option_Include_s;
-extern  const char* const Option_Include_l;
-
+// command line arguments are directly defined in parseargs.cpp
 
 // HTML-Tags for the Include
 extern const std::string Include_Tag_Start_s;

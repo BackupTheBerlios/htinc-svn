@@ -36,7 +36,7 @@
 #include "structs.h"        // including the return struct und return values
 #include "globals.h"        // Settings and Command Line Options
 #include "examine.h"        // Header for the examine object
-#include "utils/cmdargs.h"  // der command line parser
+#include "parseargs.h"      // command line arguments parser
 
 
 // we wanna use this:
@@ -50,73 +50,33 @@ int main(int argc, char **argv) {
   std::string dateiname;          // the file to read
   std::string incdir;         // include directory
 
-  // command line parsing
-  {  // spans space for command line parser object
-    tools::cmd_args cl;    // Command Line
-
-    // register options
-    cl.add_option(setup::Option_Help_l, setup::Option_Help_s); // Help
-    cl.add_option(setup::Option_Version_l, setup::Option_Version_s); // Version
-    cl.add_option(setup::Option_Quiet_l, setup::Option_Quiet_s); // Quiet
-    cl.add_option(setup::Option_Debug_l, setup::Option_Debug_s); // Quiet
-    cl.add_option(setup::Option_Include_l, setup::Option_Include_s, 1); // Include
-
-    // start parsing
-    cl.parse(argc, argv);
-
-    // help text wanted?
-    if ( cl.is_option(setup::Option_Help_s) ) {
-      cout << setup::Helptext;
-      return structures::exit_codes(structures::NO_ERR);
-    }
-
-    // version wanted?
-    if ( cl.is_option(setup::Option_Version_s) ) {
-      cout << setup::Copyright << endl;
-      return structures::exit_codes(structures::NO_ERR);
-    }
+  // *** command line parsing
+  {
+    parseargs::arguments options;   // program options
+    parseargs::getcommandline(argc, argv, options);  // parsing
 
     // Option Quiet found?
-    if ( cl.is_option(setup::Option_Quiet_s) ) {
+    if ( options.quiet ) {
       setup::Message_Level = structures::QUIET;   // set new message level
     }
 
     // Option Debug found?
-    if ( cl.is_option(setup::Option_Debug_s) ) { // can override Quiet
+    if ( options.debug ) { // can override Quiet
       setup::Message_Level = structures::DEBUG;   // set new message level
     }
 
-    if ( (cl.count() < 1 ) || (cl.count() > 2) ) {
-      // too few or too many parameters
-      cerr << "Error: No or too many input files!\n"
-	   << "Help text with \"htinc -h\"\n\n";
-      // Error: wrong parameters or options
-      return structures::exit_codes(structures::WRONG_PARAS);
-    }
-
     // Option Include not found?
-    if ( !(cl.is_option(setup::Option_Include_s)) ) {
-      // no
-      cerr << "Error: option \"" << setup::Option_Include_s << "\" not found!\n"
-	   << "Help text with \"htinc -h\"\n\n";
-      // Error: wrong parameters or options
-      return structures::exit_codes(structures::WRONG_PARAS);
-    }
-
-    // get Option Include argument
-    incdir = cl.option_arg(setup::Option_Include_s);
-    if (incdir.empty()  ) {
-      // no content
-      cerr << "Error: Missing Include directory after option \""
-	   << setup::Option_Include_s << "\"!\n"
-	   << "Help text with \"htinc -h\"\n\n";
-      // Error: wrong parameters or options
-      return structures::exit_codes(structures::WRONG_PARAS);
+    if ( options.incdir == NULL ) {
+      // set to default directory
+      incdir = setup::Default_Inc_Dir;
+    } else {
+    // the include directory supplied
+    incdir = options.incdir;    
     }
 
     // everything OK!
     // now get also the file name
-    dateiname = cl.arg(0);
+    dateiname = options.file;
   } // End of Command Line space
 
 

@@ -185,8 +185,6 @@ This are the Exit-Codes returned by HTML Include.
 The Author can be reached by mailing to robert.lange@s1999.tu-chemnitz.de
 Questions, Proposals, something else? Just write me.
 
-The command line parser object is (C) by Jan Langer (Jan@Langernetz.de).
-
 HTML Include is hosted at BerliOS (developer.berlios.de) in a
 subversion repository.
 

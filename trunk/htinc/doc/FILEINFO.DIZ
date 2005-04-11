@@ -1,16 +1,17 @@
 Description of the Source Files
 *******************************
 
-    main.h   - Settings and Message Strings for the whole project
-    main.cpp - Initialises the program and calls the Examine Object
- examine.h   - Declaration of th Examine Object
- examine.cpp - Search file for Include Tags and pass them to the Include Object
-includes.h   - Declaration of the Includes Object
-includes.cpp - Check if the Include file was changed and renews it
- structs.h   - Declaration of globally used structures and enumerations
- auxfunc.h   - Function for copying a file into an (STL) container
+    main.h    - Settings and Message Strings for the whole project
+    main.cpp  - Initialises the program and calls the Examine Object
+ examine.h    - Declaration of th Examine Object
+ examine.cpp  - Search file for Include Tags and pass them to the Include Object
+includes.h    - Declaration of the Includes Object
+includes.cpp  - Check if the Include file was changed and renews it
+parseargs.h   - Declaration of the Arguments structure and parse function
+parseargs.cpp - Command Line Parser with the help of arpg from libC
+ structs.h    - Declaration of globally used structures and enumerations
+ auxfunc.h    - Function for copying a file into an (STL) container
 
-utils/cmdargs.h - Command Line Parser Object (by Jan Langer)
 
 
 last modified: $LastChangedDate$

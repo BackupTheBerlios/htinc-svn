@@ -27,43 +27,12 @@ namespace setup {  // Messages and Settings
 
 // Copyright message
 const char* const Copyright =
-"         " PACKAGE_STRING " - (C) 2002,2005 MadDog/Robert Lange\n"
-"      robert.lange@s1999.tu-chemnitz.de, Command Line Parser by Jan Langer";
+"        " PACKAGE_STRING " - (C) 2002,2005 Robert Lange\n"
+"        robert.lange@s1999.tu-chemnitz.de, Licensed under GPL";
 
 
-// Help text
-const char* const Helptext =
-"HTML Include handles Include files in HTML Source files. It checks\n"
-"the given source file for Start and End Tags (special-styled comments) and\n"
-"replace the content of the embraced area with the content in the\n"
-"associated include file, if the content differs.\n"
-"\n"
-"Usage: htinc [filename|-h|-v] -i include_dir {-q}\n"
-"-h/--help - shows this help screen\n"
-"-v/--version - prints version\n"
-"-q/-quiet - prints only error messages\n"
-"-d/-debug - enable debug messages\n"
-"filename - the file which should be processed\n"
-"-i/-inc - directory (relative to current directory) where the include\n"
-"          files should be searched (with slash at the end)\n"
-"\n"
-"Example: htinc index.html -i ../includes/\n"
-"\n"
-"Send bug reports to: " PACKAGE_BUGREPORT
-"\n"
-;
-
-// Command Line Options
-const char* const Option_Help_l = "--help"; // Help
-const char* const Option_Help_s = "-h";
-const char* const Option_Version_s = "-v"; // Version
-const char* const Option_Version_l = "--version";
-const char* const Option_Quiet_s = "-q"; // Quiet
-const char* const Option_Quiet_l = "-quiet";
-const char* const Option_Debug_s = "-d"; // Debug
-const char* const Option_Debug_l = "-debug";
-const char* const Option_Include_s = "-i"; // Include Dir
-const char* const Option_Include_l = "-inc";
+// Default Include Directory: current dir
+const char* const Default_Inc_Dir = "./";
 
 
 // HTML-Tags for the Include

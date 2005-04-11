@@ -6,7 +6,7 @@ bin_PROGRAMS = htinc
 htinc_SOURCES = auxfunc.h examine.h includes.h \
      examine.cpp includes.cpp main.cpp structs.h \
      globals.h globals.cpp \
-     utils/cmdargs.h
+     parseargs.h parseargs.cpp
 
 # include debugging code if wanted (DEBUG comes from configure)
 if DEBUG
