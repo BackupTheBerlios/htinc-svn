@@ -22,38 +22,34 @@
 #define EXAMINE__H
 
 // Headers
-#include <string>    // String
-#include <list>      // STL List
+#include <string>
 
 #include "includes.h"   // Declaration of the Include Object
 #include "structs.h"    // including the return struct
 
 
 
+
 class examine {
 private:
-  // Typedefs
-  typedef std::list<std::string> filelist_type_;  // List of the file's lines
-                 // correspond to: includes::list_type_
 
-  // local variables
-  includes inc_;       // Inc-Object
-  filelist_type_ file_;     // the file's representation
-  const filelist_type_::size_type Include_Tag_Start_s_Len;
-        // Length of Include_Tag_Start_s
-  const filelist_type_::size_type Include_Tag_Start_e_Len;
-        // Length of Include_Tag_Start_e
-
-  bool writebackfile(const std::string &);  // Copy the list back to the file
-      // Argument: File name
 
 public:
 
-  explicit examine(const std::string &);   // C'tor
-     // Argument: Include-Directory
-  struct structures::ret operator() (const std::string &);    // do examination
-     // Argument: file which should be examined
-  //  inline void clear() { file_.clear(); };  // clear the storage variables
+  explicit examine() {};   // C'tor
+
+  // do examination
+  struct structures::ret operator() (structures::filelist_type &,
+				     includes &,
+				     const structures::tags &,
+				     bool &,
+				     std::string &);
+     // Argument 1: file which should be examined (as loaded list)
+     // Argument 2: Includes Object
+     // Argument 3: Structures with parsing definitions
+     // Argument 4: true, if file was changed
+     // Argument 5: Name of changed include files, if Arg.4 is true
+
 
 
 

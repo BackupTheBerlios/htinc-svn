@@ -35,6 +35,7 @@ includes::includes(const std::string &incdir) : incdir_(incdir)   // C'tor
 
 
 // *** check the includes ***
+// Later, the End Tag detection also will be done by the examine object
 struct structures::ret includes::operator()
   (list_type_ & source, list_type_::iterator &itr,
    const std::string &file, bool &modified)      { // check include
@@ -100,6 +101,7 @@ struct structures::ret includes::operator()
 	returnvalues.line = distance(source.begin(), src_begin); // line of start tag
 	return returnvalues;      // signal error
       } // else
+      // TODO: still using name from the setup space, not the Tags struct
       if ( (*itr) == setup::Include_Tag_End) {  // it is so
 	++itr; // last increment
 	if (setup::Message_Level >= structures::DEBUG) {    // Debug

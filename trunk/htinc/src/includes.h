@@ -39,10 +39,6 @@ private:
   typedef std::string key_type_;       // Key for keeping the include's in the map
   typedef std::map<key_type_, inc_type_> storage_type_; // storing alle the includes
 
-  typedef std::list<std::string> list_type_;  // List used withing the examine object
-                                              // (for calling the operator() )
-                 // correspond to: examine::filelist_type_
-
   // private variables
   std::string incdir_;      // the include directory
   storage_type_ incmap_;    // map storing the include file's content
@@ -52,6 +48,9 @@ private:
      // Argument: file name of the given include file
 
 public:
+
+  // typedef as shortcut
+  typedef structures::filelist_type list_type_;
 
   explicit includes(const std::string &);   // C'tor
      // Argument: Include-Directory

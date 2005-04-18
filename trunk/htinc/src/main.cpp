@@ -31,12 +31,15 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>          // file stream
 
 #include "config.h"         // Settings from configure
 #include "structs.h"        // including the return struct und return values
 #include "globals.h"        // Settings and Command Line Options
 #include "examine.h"        // Header for the examine object
+#include "includes.h"       // Header for the Include Object
 #include "parseargs.h"      // command line arguments parser
+#include "auxfunc.h"        // for copyfile function
 
 
 // we wanna use this:
@@ -44,11 +47,29 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
+namespace {     // anonymous namespace
+  // does the whole loading and examining of the file
+  struct structures::ret analysefile(const std::string &,
+				     const std::string &);
+      // Argument 1: File Name
+      // Argument 2: Include Directory
+      // return: Return Value
+
+
+  // Copy the list back to the file
+  bool writebackfile(const structures::filelist_type &, 
+		     const std::string &);
+      // Argument 1: List of File Lines
+      // Argument 2: File name to copy to
+}
+
 int main(int argc, char **argv) {
 
   // "global" variables
   std::string dateiname;          // the file to read
-  std::string incdir;         // include directory
+  std::string incdir;             // include directory
+  structures::ret retval;         // return variable
+
 
   // *** command line parsing
   {
@@ -83,17 +104,12 @@ int main(int argc, char **argv) {
   if (setup::Message_Level > structures::QUIET)    // issue Copyright
     cout << setup::Copyright << endl << endl;
 
-  // return variable
-  structures::ret retval;
 
-  // examine object
-  {  // space for the examine object
-    examine ex(incdir);   // initialise with Include Directory
+  // *** do the whole examination
+  retval = analysefile(dateiname, incdir);
 
-    // do examination
-    retval = ex(dateiname);
-  } // End space examine object
 
+  // *** parse return values
   switch ( retval.val ) {
   case structures::OK:
     if (setup::Message_Level >= structures::DEBUG)    // issue Finish
@@ -148,3 +164,131 @@ int main(int argc, char **argv) {
 
 
 }  // End main
+
+
+
+
+
+namespace {         // anonymous namespace
+
+// *** does the whole loading and examining of the file ***
+struct structures::ret analysefile(const std::string &dateiname,
+				   const std::string &incdir) {
+      // Argument 1: File Name
+      // Argument 2: Include Directory
+      // return: Return Value
+
+
+  // "global" variables
+  std::string upincs;             // contain the name of all updated
+                            // include files (from examine object)
+  structures::filelist_type file; // the file's representation
+  structures::ret retval;         // return variable
+  structures::tags tags;          // Tags to work with
+  bool changed=false;             // Record whether file was modified
+
+  // set default error return
+  retval.val = structures::OK;       // no error
+
+
+  // *** load file into list
+  { // space for filestream
+    std::ifstream filestream(dateiname.c_str());   // open file for Input
+    if ( !(filestream) || !(filestream.is_open()) ) { // file could not be opened
+      retval.val = structures::ERR_OPEN_FILE;  // signal error type
+      return retval;
+    } // else
+      // could open file
+    
+      // first of all: Copy the file into the list
+    if (copyfile(filestream, file) == false ) {
+      retval.val = structures::ERR_READFILE;
+      return retval;
+    } // else: File copied into list
+    filestream.close();    // now close file stream
+    if (setup::Message_Level >= structures::NORMAL) {    // print processed file
+      std::cout << "process file: " << dateiname << " ("
+		<< distance(file.begin(), file.end())
+		<< " lines)\n";
+    }
+  } // End space for filestream
+  
+
+
+  // *** examine object
+  {  // space for the examination
+    examine ex;   // create examine object
+
+    // create includes object
+    includes inc(incdir);
+    // Fill Tags structure
+    tags.start_prefix=setup::Include_Tag_Start_s;
+    tags.start_suffix=setup::Include_Tag_Start_e;
+    tags.end=setup::Include_Tag_End;
+
+    // do examination with includes object
+    retval = ex(file, inc, tags, changed, upincs);
+  } // End space examine object
+
+
+  // *** Write back file, if needed
+  // and no error occured before
+  if ( (retval.val == structures::OK) && (changed)  ) {
+    // yes - write it back
+    if (writebackfile(file, dateiname) == false ) {
+      retval.val = structures::ERR_WRITEFILE;    // error writing back!
+      return retval;
+    } // else: // okay
+    if (setup::Message_Level >= structures::NORMAL) {    // Status message
+      std::cout << "   Updated Includes: " << upincs << std::endl; // updated includes
+      std::cout << "   file modified: "  // file modified
+		<< distance(file.begin(), file.end())
+		<< " lines written\n";
+    }
+  }
+
+  return retval;
+}
+
+
+
+// *** Copy list to stream ***
+bool writebackfile(const structures::filelist_type &file, 
+		   const std::string &fname) {
+      // Argument 1: List of File Lines
+      // Argument 2: File name to copy to
+
+  // first of all: Clear file
+  std::ofstream fs(fname.c_str(), std::ios::out|std::ios::trunc);
+    // open file for Output and truncate it
+  if ( !(fs) || !(fs.is_open()) ) { // file could not be opened
+    return false;                  // signal error
+  }
+
+  // local variables
+  structures::filelist_type::const_iterator itr = file.begin();
+  const structures::filelist_type::const_iterator itr_end = file.end();
+
+  // Assumption: list can't be empty, because for writing back it
+  // has to be modified. And for modification it has at least
+  // two lines (start and end tag)
+
+
+  // copy
+  for (;;) {  // see assumption: first line can be dereferenced without danger
+    fs << *itr;     // put back
+    ++itr;  // increment
+    if (itr == itr_end)   // if the last line was written
+      break;  // break before writing (invalid) additional endline into file
+    fs << '\n';     // add line break
+    if ( !fs || !(fs.good()) )  // something went wrong!
+      return false;        // Error
+  } // End while
+  
+  if (setup::Message_Level >= structures::DEBUG) {    // Debug
+    std::cout << "Debug (E): " << distance(file.begin(), file.end())
+	      << " lines written back\n";
+  }
+  return true;  // no error
+}
+}         // anonymous namespace

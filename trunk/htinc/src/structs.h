@@ -4,7 +4,7 @@
 
  Created: 13.10.2k2
  last Modification: $LastChangedDate$
- Function: Declaration of globally used structures and enumerations
+ Function: Declaration of globally used structures, enumerations and Typedefs
  
 
     This program is free software; you can redistribute it and/or modify
@@ -20,6 +20,9 @@
 
 #ifndef STRUCTS__H
 #define STRUCTS__H
+
+#include <string>    // String
+#include <list>      // STL List
 
 namespace structures {
 
@@ -42,6 +45,14 @@ namespace structures {
     std::string text;  // messages in error
   };
 
+  // Pass tag formats to the examine object
+  struct tags {
+    std::string start_prefix;   // Beginning of Start Tag
+    std::string start_suffix;  // End of Start Tag
+         // if zero length, then start tag has no parameter
+    std::string end;            // End-Tag
+  };
+
 
   // declare Message-Level enumeration
   // a higher number represents more output
@@ -61,6 +72,10 @@ namespace structures {
     NO_INC_NAME=4,   // Start Tag lacks an include file name
     BAKA=99          // internal (i. e. unexpected) error
   };
+
+  // *** Typedefs
+  // TODO: replace maybe by slist?
+  typedef std::list<std::string> filelist_type;  // List of the file's lines
 
 } // End namespace structures 
 
