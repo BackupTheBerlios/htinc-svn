@@ -32,6 +32,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>          // file stream
+#include <algorithm>        // copy
+#include <iterator>         // ostream_iterator
 
 #include "config.h"         // Settings from configure
 #include "structs.h"        // including the return struct und return values
@@ -55,11 +57,10 @@ namespace {     // anonymous namespace
       // Argument 2: Include Directory
       // return: Return Value
 
-
   // Copy the list back to the file
-  bool writebackfile(const structures::filelist_type &, 
+  bool writebackfile(const structures::file &, 
 		     const std::string &);
-      // Argument 1: List of File Lines
+      // Argument 1: List of File Characters and Line Number Object
       // Argument 2: File name to copy to
 }
 
@@ -107,6 +108,7 @@ int main(int argc, char **argv) {
 
   // *** do the whole examination
   retval = analysefile(dateiname, incdir);
+  cout.flush();        // and flush cout, just in case of following error
 
 
   // *** parse return values
@@ -182,7 +184,8 @@ struct structures::ret analysefile(const std::string &dateiname,
   // "global" variables
   std::string upincs;             // contain the name of all updated
                             // include files (from examine object)
-  structures::filelist_type file; // the file's representation
+  structures::file file;    // the file's representation with line numbers
+  
   structures::ret retval;         // return variable
   structures::tags tags;          // Tags to work with
   bool changed=false;             // Record whether file was modified
@@ -201,14 +204,14 @@ struct structures::ret analysefile(const std::string &dateiname,
       // could open file
     
       // first of all: Copy the file into the list
-    if (copyfile(filestream, file) == false ) {
+    if (copyfile(filestream, file.chars, &file.line) == false ) {
       retval.val = structures::ERR_READFILE;
       return retval;
     } // else: File copied into list
     filestream.close();    // now close file stream
     if (setup::Message_Level >= structures::NORMAL) {    // print processed file
       std::cout << "process file: " << dateiname << " ("
-		<< distance(file.begin(), file.end())
+		<< distance(file.chars.begin(), file.chars.end())
 		<< " lines)\n";
     }
   } // End space for filestream
@@ -242,7 +245,7 @@ struct structures::ret analysefile(const std::string &dateiname,
     if (setup::Message_Level >= structures::NORMAL) {    // Status message
       std::cout << "   Updated Includes: " << upincs << std::endl; // updated includes
       std::cout << "   file modified: "  // file modified
-		<< distance(file.begin(), file.end())
+		<< distance(file.chars.begin(), file.chars.end())
 		<< " lines written\n";
     }
   }
@@ -253,9 +256,9 @@ struct structures::ret analysefile(const std::string &dateiname,
 
 
 // *** Copy list to stream ***
-bool writebackfile(const structures::filelist_type &file, 
+bool writebackfile(const structures::file &file, 
 		   const std::string &fname) {
-      // Argument 1: List of File Lines
+      // Argument 1: List of File Characters and Line Number Object
       // Argument 2: File name to copy to
 
   // first of all: Clear file
@@ -265,30 +268,21 @@ bool writebackfile(const structures::filelist_type &file,
     return false;                  // signal error
   }
 
+
   // local variables
-  structures::filelist_type::const_iterator itr = file.begin();
-  const structures::filelist_type::const_iterator itr_end = file.end();
-
-  // Assumption: list can't be empty, because for writing back it
-  // has to be modified. And for modification it has at least
-  // two lines (start and end tag)
-
+  structures::filelist_type::const_iterator itr = file.chars.begin();
+  const structures::filelist_type::const_iterator itr_end = file.chars.end();
+  std::ostream_iterator<char> oo(fs); // output-iterator
 
   // copy
-  for (;;) {  // see assumption: first line can be dereferenced without danger
-    fs << *itr;     // put back
-    ++itr;  // increment
-    if (itr == itr_end)   // if the last line was written
-      break;  // break before writing (invalid) additional endline into file
-    fs << '\n';     // add line break
-    if ( !fs || !(fs.good()) )  // something went wrong!
-      return false;        // Error
-  } // End while
+  std::copy(itr, itr_end, oo);
   
   if (setup::Message_Level >= structures::DEBUG) {    // Debug
-    std::cout << "Debug (E): " << distance(file.begin(), file.end())
+    std::cout << "Debug (E): " << file.line.linecount()
 	      << " lines written back\n";
   }
   return true;  // no error
 }
+
+
 }         // anonymous namespace

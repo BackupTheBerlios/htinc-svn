@@ -19,8 +19,19 @@
     GNU General Public License for more details.
 */
 
+/* TODO
+- issue warning (or react in any other way) if we overrun another valid start
+  tag while replacing text
+  - reason: most likely we did something not wanted because of a missing/
+            typo in a End-Tag
+
+
+*/
+
 // includes
-#include <iostream>  // for printing debug messages
+#include <iostream>   // for printing debug messages
+#include <algorithm>  // search
+#include <iterator>   // advance
 
 #include "config.h"  // Settings from configure
 #include "globals.h" // Message-Level et al
@@ -30,7 +41,7 @@
 
 // *** Examine the file ***
 struct structures::ret examine::operator() (
-				   structures::filelist_type &file,
+				   structures::file &f,
 				   includes &inc,
 				   const structures::tags &tags,
 				   bool &changed,
@@ -42,20 +53,21 @@ struct structures::ret examine::operator() (
      // Argument 5: Name of changed include files, if Arg.4 is true
 
 
-  // Constants
-  const structures::filelist_type::size_type Start_Prefix_Size
-                        = tags.start_prefix.size();
-        // Length of Include_Tag_Start_s
-  const structures::filelist_type::size_type Start_Suffix_Size
-                        = tags.start_suffix.size();
-        // Length of Include_Tag_Start_e
-
   // return structure
   struct structures::ret returnvalues;
 
   // local variables
-  structures::filelist_type::iterator itr
-            = file.begin();  // Iterator variable
+  structures::filelist_type & file = f.chars;  // Shortcut to the List itself
+  const structures::filelist_type::iterator itrstart
+            = file.begin();  // Iterator variable, list start
+  const structures::filelist_type::iterator itrend
+            = file.end();  // Iterator variable, list end
+  structures::filelist_type::iterator itr = itrstart;
+                                     // Iterator variable, current position
+  structures::filelist_type::iterator
+            ipref, // Iterator, found start tag prefix
+            isuf,  // Iterator, found start tag suffix
+            ietag; // Iterator, end tag
   std::string incname;       // Name of the include file
   bool first_upinc = true;   // true: insert first include into string upincs
   bool loc_changed;          // local change marker (to detect which include files
@@ -65,57 +77,96 @@ struct structures::ret examine::operator() (
   changed = false;
   upincs.clear();            // clear return string
 
-  // scan list, until a Include Start-Tag is found
-  while (itr != file.end() ) {
-    if ((*itr).compare(0, Start_Prefix_Size, tags.start_prefix) == 0) {
-      // Found the Beginning of a Start Tag!
-      if (setup::Message_Level >= structures::DEBUG) {    // Debug
-	std::cout << "Debug (E): found start tag's beginning\n";
-      }
-      // Now check: End of Start-Tag present?
-      if (itr->compare( itr->size()-Start_Suffix_Size, 
-			Start_Suffix_Size, tags.start_suffix) != 0) {
-	// no End of Start-Tag found: It's no valid Start Tag
-	++itr; // just increment iterator
-      } else { // Valid Tag - now extract the include's name
-	if (setup::Message_Level >= structures::DEBUG) {    // Debug
-	  std::cout << "Debug (E): ... and start tag's ending\n";
-	}
-	incname.assign(*itr, Start_Prefix_Size,
-	       itr->size() - Start_Prefix_Size - Start_Suffix_Size);
-	// Check: no empty string?
-	if (incname.empty() == true) { // Error: include name is empty
-	  // fill return structure
-	  returnvalues.val = structures::ERR_MISSING_INCNAME;
-	  returnvalues.line = distance(file.begin(), itr) + 1; // Error in line xxx
-	  return returnvalues;    // and exit
-	}
-	// else: OK - Call Includes Object
-	++itr;    // increment iterator to next line after Start Tag
-	if (setup::Message_Level >= structures::DEBUG) {    // Debug
-	  std::cout << "Debug (E): include name: " << incname << '\n';
-	}
-	loc_changed = false;
-	returnvalues = inc(file, itr, incname, loc_changed);
-	if (loc_changed == true) {  // include file was modified
-	  changed = true;      // save this
-          if (upincs.find(incname) == upincs.npos) { // name not yet saved
-	    if (first_upinc == true) // first time
-	      first_upinc = false;   // save this call
-	    else
-	      upincs += ' ';          // add a space
-	    upincs += incname;    // add include name to changelist
-	  }  // End if (upincs.find(incname) == upincs.npos)
-	} // End if (loc_changed == true)
-	if (returnvalues.val  != structures::OK) { // some error was encountered
-	  return returnvalues;    // just pass the error code back to caller
-	}
-      } // End if (itr->compare( itr->size()-Start_Prefix_Size, ...
-    } else {
-      ++itr;     // only increment
-    } // End if ((*itr).compare(0, Start_Prefix_Size, ...
-  } // End while
+  // scan list, until a Include Start-Tag is found (save pos as ipref)
+  while (itrend != (ipref = std::search(itr, itrend,
+		    tags.start_prefix.begin(), tags.start_prefix.end() ))
+	 ) {
+    // Found the Beginning of a Start Tag!
+    if (setup::Message_Level >= structures::DEBUG) {    // Debug
+      std::cout << "Debug (E): found start tag's beginning\n";
+    }
+    // make ipref pointing after start tag's prefix
+    std::advance(ipref, tags.start_prefix.size() );
 
+    // Case 1: We do expect a parameter along with a tag suffix
+    if (! tags.start_suffix.empty() ) {
+      // Now check: End of Start-Tag present?
+      isuf = std::search(ipref, itrend,
+	     tags.start_suffix.begin(), tags.start_suffix.end() );
+      if (isuf == itrend) {
+	// no End of Start-Tag found: It's no valid Start Tag
+	if (setup::Message_Level >= structures::DEBUG) {    // Debug
+	  std::cout << "Debug (E): ... but no tag suffix, therfore ignoring\n";
+	}
+	itr = ipref; // just assign iterator to next character
+	++itr;
+	continue;
+      } // else: Valid Tag
+      if (setup::Message_Level >= structures::DEBUG) {    // Debug
+	std::cout << "Debug (E): ... and start tag's ending\n";
+      }
+      // now extract the include's name
+      incname.assign(ipref, isuf);
+      // Check 1: no empty string?
+      if (incname.empty() == true) { // Error: include name is empty
+	// fill return structure
+	returnvalues.val = structures::ERR_MISSING_INCNAME;
+	// Error in line xxx
+	returnvalues.line = f.line(std::distance(itrstart, --ipref) );
+	return returnvalues;    // and exit
+      }
+      // Check 2: no newline character included
+      if (incname.find('\n') != incname.npos) {
+	// means not valid, just continue
+	if (setup::Message_Level >= structures::DEBUG) {    // Debug
+	  std::cout << "Debug (E): ... newline in parameter encountered, therefore ignoring\n";
+	}
+	itr = ipref; // just assign iterator to next character
+	++itr;
+	continue;
+      } // else: All checks passed
+      if (setup::Message_Level >= structures::DEBUG) {    // Debug
+	std::cout << "Debug (E): include name: " << incname << '\n';
+      }
+      // let isuf point after the start tag suffix
+      std::advance(isuf, tags.start_suffix.size() );
+    } else {   // we have no parameter
+      incname.clear();       // it's empty, of course
+      // let isuf point after the start tag prefix
+      isuf = ipref;
+    }
+
+    // now find end tag
+    ietag = std::search(isuf, itrend,
+		       tags.end.begin(), tags.end.end() );
+    if (ietag == itrend) {
+      // ERR: end of source file reached before include file ended
+	returnvalues.val = structures::ERR_MISSING_ENDTAG; // error cause
+	returnvalues.line = f.line(std::distance(itrstart, --ipref));
+	return returnvalues;      // signal error
+    } // else: Valid Endtag
+
+    // else: OK - Call Includes Object
+    loc_changed = false;
+    returnvalues = inc(f, isuf, ietag, incname, loc_changed);
+
+    if (loc_changed == true) {  // include file was modified
+      changed = true;      // save this
+      if (upincs.find(incname) == upincs.npos) { // name not yet saved
+	if (first_upinc == true) // first time
+	  first_upinc = false;   // save this call
+	else
+	  upincs += ' ';          // add a space
+	upincs += incname;    // add include name to changelist
+      }  // End if (upincs.find(incname) == upincs.npos)
+    } // End if (loc_changed == true)
+    if (returnvalues.val  != structures::OK) { // some error was encountered
+      return returnvalues;    // just pass the error code back to caller
+    }
+    // Update Iterator
+    itr = ietag;
+    advance(itr, tags.end.size() );
+  } // End while
 
   returnvalues.val = structures::OK;   // no errors
   return returnvalues;     // go back

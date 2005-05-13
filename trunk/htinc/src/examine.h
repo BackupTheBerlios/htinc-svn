@@ -39,7 +39,7 @@ public:
   explicit examine() {};   // C'tor
 
   // do examination
-  struct structures::ret operator() (structures::filelist_type &,
+  struct structures::ret operator() (structures::file &,
 				     includes &,
 				     const structures::tags &,
 				     bool &,

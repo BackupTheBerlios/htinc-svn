@@ -20,39 +20,35 @@
 
 
 // *** Copy stream to list ***
+// Character by Character
 template<class LIST>
-bool copyfile(std::ifstream &fs, LIST & list) {  // Copy a file into the list
-  // Argument: File stream to read from
+bool copyfile(std::ifstream &fs, LIST & list, class linenum *line = NULL) {
+  // Argument 1: File stream to read from
+  // Argument 2: List to copy into
+  // Argument 3: Line Number Object to record the positions of
+  //             newlines, if it is not NULL
 
   list.clear();    // clear the list
   //  fs.clear();       // clear filestream error bits
   fs.seekg(0);      // go to the beginning
 
   // local variable
-  std::string tmp;  // storage buffer
   char tchar;
 
   // copy
 
   for(;;) {
-    tmp.clear();      // clear storage string
-    for(;;) {
-      fs.get(tchar);
-      if ( fs.eof() || tchar == '\n')
-	break;       // stream ended or newline detected
-      // else
-      tmp.push_back(tchar);  // add char to string
-    } 
-    
-    if ( fs.bad() )
+    fs.get(tchar);
+    if ( fs.eof() )   {     // stream ended
+	return true;        // no error
+    }   // else
+    if ( fs.bad() ) {
       return false;        // Reading went wrong
-    // else
-    if (fs.eof()) {   // end reached
-      if (!(tmp.empty()) ) {
-	list.push_back(tmp);   // insert last tmp into list
-      }
-      return true;  // no error
-    } // else
-    list.push_back(tmp);   // insert tmp into list
-  }
+    }
+    if ( (line!=NULL) && (tchar == '\n') ) {     // record endline position
+      line->add(list.size() );
+    }
+    list.push_back(tchar);  // add char
+  } 
+
 }

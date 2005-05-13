@@ -28,24 +28,26 @@
 #include <string>          // all-purposes
 #include <map>            // Storing the Include files
 #include <iostream>      // Debug Messages
-#include "structs.h"    // including the return struct
+
+#include "structs.h"   // including the return struct
 
 
 
 class includes {
 private:
   // typedef's
-  typedef std::vector<std::string> inc_type_;  // List of the file's lines
+  typedef std::vector<char> inc_type_;  // List of the file's lines
   typedef std::string key_type_;       // Key for keeping the include's in the map
   typedef std::map<key_type_, inc_type_> storage_type_; // storing alle the includes
 
   // private variables
   std::string incdir_;      // the include directory
   storage_type_ incmap_;    // map storing the include file's content
+                            // the key is the include file with path
 
   // private functions
   bool store_include_(const std::string &);
-     // Argument: file name of the given include file
+     // Argument: file name (with path) of the given include file
 
 public:
 
@@ -56,12 +58,14 @@ public:
      // Argument: Include-Directory
 
     struct structures::ret operator()
-      (list_type_ &, list_type_::iterator &, const std::string &, bool &);
-     // Argument 1: the List containing the source file
-     // Argument 2: Iterator pointing to the first line of the include
-     // Argument 3: file name of the given include file
-     // Argument 4: set to 'true' if list was changed
-
+      (structures::file &,
+       const list_type_::iterator &, const list_type_::iterator &,
+       const std::string &, bool &);
+     // Argument 1: the List and Line Number Obj.  containing the source file
+     // Argument 2: Iterator pointing to the first character of the include
+     // Argument 3: Iterator pointing after the last character of the include
+     // Argument 4: file name of the given include file
+     // Argument 5: set to 'true' if list was changed (otherwise don't touch)
 
 };    // End class includes
 

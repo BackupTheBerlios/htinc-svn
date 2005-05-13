@@ -24,7 +24,20 @@
 #include <string>    // String
 #include <list>      // STL List
 
+#include "linenum.h" // Line Number Object
+
 namespace structures {
+
+  // *** Typedefs
+  // TODO: replace maybe by slist?
+  typedef std::list<char> filelist_type;  // List of the file's characters
+
+
+  // File Stream and Line Number Object, passed to Examine Object
+  struct file {
+    filelist_type chars;         // the File itself as stream
+    class linenum line;           // Line Number Object associated with stream
+  };
 
   // Return Values used by the Examine Object
   enum return_val {  // in Parenteses: variables used from struct ret
@@ -72,10 +85,6 @@ namespace structures {
     NO_INC_NAME=4,   // Start Tag lacks an include file name
     BAKA=99          // internal (i. e. unexpected) error
   };
-
-  // *** Typedefs
-  // TODO: replace maybe by slist?
-  typedef std::list<std::string> filelist_type;  // List of the file's lines
 
 } // End namespace structures 
 

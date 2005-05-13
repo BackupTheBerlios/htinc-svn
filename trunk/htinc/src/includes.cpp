@@ -20,12 +20,12 @@
 
 // includes
 #include <fstream>
+#include <algorithm>   // equal
+
 #include "includes.h"
 #include "config.h"  // Settings from configure
 #include "auxfunc.h" // for copyfile function
 #include "globals.h" // get Settings
-
-
 
 // *** Constructor ***
 includes::includes(const std::string &incdir) : incdir_(incdir)   // C'tor
@@ -35,108 +35,93 @@ includes::includes(const std::string &incdir) : incdir_(incdir)   // C'tor
 
 
 // *** check the includes ***
-// Later, the End Tag detection also will be done by the examine object
-struct structures::ret includes::operator()
-  (list_type_ & source, list_type_::iterator &itr,
-   const std::string &file, bool &modified)      { // check include
-     // Argument 1: the List containing the source file
-     // Argument 2: Iterator pointing to the first line of the include
-     // Argument 3: file name of the given include file
-     // Argument 4: set to 'true' if list was changed
+struct structures::ret includes::operator() (structures::file & file,
+       const list_type_::iterator & itr,
+       const list_type_::iterator &itrend,
+       const std::string &incname, bool &modified) {
+     // Argument 1: the List and Line Number Obj.  containing the source file
+     // Argument 2: Iterator pointing to the first character of the include
+     // Argument 3: Iterator pointing after the last character of the include
+     // Argument 4: file name of the given include file
+     // Argument 5: set to 'true' if list was changed (otherwise don't touch)
 
-    // local variables
+    // *** local variables
     structures::ret returnvalues;       // create return 'stack'
 
+    // *** construct file name with path
+    std::string incfile(incdir_);       // declare variable
+    // do we need to add path separator inbetween?
+    if ( (incdir_[incdir_.size()-1] != '/') &&
+	 (incfile[0] != '/') ) {
+      incfile.push_back('/');          // yes
+    }
+    incfile += incname;         // append name
+
+
     // check, if the include is already stored
-    if (incmap_.find(file) == incmap_.end() ) {
+    if (incmap_.find(incfile) == incmap_.end() ) {
       // not stored yet
-      if (!store_include_(file)) { // error storing the new include
+
+      if (!store_include_(incfile)) { // error storing the new include
 	returnvalues.val = structures::ERR_LOADING_INC; // Type of error
-	returnvalues.text = incdir_ + file;           // encountered with this file
+	returnvalues.text = incfile;           // encountered with this file
 	return returnvalues;       // go back
       }
       // else: OK: one can continue
       if (setup::Message_Level >= structures::DEBUG) {    // Debug
-	const storage_type_::const_iterator inc_pos = incmap_.find(file);
+	const storage_type_::const_iterator inc_pos = incmap_.find(incfile);
 	      // shortcut to specific include
-	std::cout << "Debug (I): new include file stored: " << file << " ("
+	std::cout << "Debug (I): new include file stored: " << incfile << " ("
 		  << distance( (inc_pos->second).begin(),
 			       (inc_pos->second).end()) 
-		  << " lines)\n";
+		  << " characters)\n";
       }
     }
 
     // more local variables
-    const storage_type_::const_iterator inc_pos = incmap_.find(file);
-           // shortcut to specific include
-    inc_type_::const_iterator incitr =  ((*inc_pos).second).begin();
-          // Iterator through the specivic include file
-    const inc_type_::const_iterator inc_begin = incitr;
-          // keep beginning of this include file
+    const storage_type_::const_iterator inc_pos = incmap_.find(incfile);
+              // shortcut to specific include
+    const inc_type_::const_iterator inc_begin = (*inc_pos).second.begin();
+             // keep beginning of this include file
     const inc_type_::const_iterator inc_end = (inc_pos->second).end();
-          // keep end of this include file
-    const list_type_::iterator ende = source.end();
-    const list_type_::iterator src_begin = itr;   // keep start in source list
-    bool changed = false;   // true if include is changed
+             // keep end of this include file
 
-    // now check, if the includes was changed
-    while (incitr != inc_end) { // first of all: compare all lines
-      if (itr == ende) {  // ERR: end of source file reached before include file ended
-	returnvalues.val = structures::ERR_MISSING_ENDTAG; // error cause
-	returnvalues.text = incdir_ + file;   // name of the include
-	returnvalues.line = distance(source.begin(), src_begin);
-	                    // line of the start tag
-	return returnvalues;      // signal error
-      }
-      if ( (*itr) != (*incitr) ) {    // not the same
-	changed = true;    // save this
-	break;       // and exit while
-      }
-      ++incitr; ++itr;   // increment both iterators
+    bool changed;   // true if include is changed
+
+    // now check, if the include was changed
+    if (std::distance(itr, itrend) != 
+	std::distance(inc_begin, inc_end) ) {
+      // One: equal length - failed
+      changed = true;
+    } else {
+      // Two: real comparision
+      changed = !(std::equal(inc_begin, inc_end, itr) );
     }
-    if (!changed) {  // check if last line is an End Tag
-      if (itr == ende) {  // ERR: no End Tag found
-	returnvalues.val = structures::ERR_MISSING_ENDTAG; // error cause
-	returnvalues.text = file;   // name of the include
-	returnvalues.line = distance(source.begin(), src_begin); // line of start tag
-	return returnvalues;      // signal error
-      } // else
-      // TODO: still using name from the setup space, not the Tags struct
-      if ( (*itr) == setup::Include_Tag_End) {  // it is so
-	++itr; // last increment
-	if (setup::Message_Level >= structures::DEBUG) {    // Debug
-	  std::cout << "Debug (I): tested include file was not modified\n";
-	}
-	returnvalues.val = structures::OK;     // everything OK
-	return returnvalues;       // and go back
+
+    if (!changed) {  // identical
+      if (setup::Message_Level >= structures::DEBUG) {    // Debug
+	std::cout << "Debug (I): tested include file was not modified\n";
       }
+      returnvalues.val = structures::OK;     // everything OK
+      return returnvalues;       // and go back
     }
     // else: include was changed and has to be replaced
-
-    // first of all: find end tag in source file
-    itr = find(itr, ende, setup::Include_Tag_End);
-    if (itr == ende) {  // ERR: end of source file reached before include file ended
-      returnvalues.val = structures::ERR_MISSING_ENDTAG; // error cause
-      returnvalues.text = file;   // name of the include
-      returnvalues.line = distance(source.begin(), src_begin);// line of the start tag
-      return returnvalues;      // signal error
-    }
-    // else: itr points to end tag
     modified = true;    // source list will now be modified
     if (setup::Message_Level >= structures::NORMAL) {    // print modified include
       std::cout << "   include file \""
-		<< file
+		<< incfile
 		<< "\" was changed (modify file)\n";
     }
 
+    // one more time local variables
+    list_type_::iterator itr_pref = itr;  // position one before start
+    --itr_pref;                           // to escape invalidation at erase
+
     // clear all in-between elements
-    source.erase(src_begin, itr);
+    file.chars.erase(itr, itrend);
 
-    // now insert new elements
-    source.insert(itr, inc_begin, inc_end);
-
-    // increment Iterator to next line (after End Tag)
-    ++itr;
+    // now insert new elements at the same position
+    file.chars.insert(++itr_pref, inc_begin, inc_end);
 
     // return with everything OK
     returnvalues.val = structures::OK;
@@ -147,15 +132,15 @@ struct structures::ret includes::operator()
 
 // *** private: store new include files ***
 bool includes::store_include_(const std::string &fil) {
-     // Argument: file name of the given include file
+     // Argument: file name (with path) of the given include file
 
-
-  std::ifstream file((incdir_ + fil).c_str());   // open file for Input
+  std::ifstream file(fil.c_str() );   // open file for Input
   
   if ( !(file) || !(file.is_open()) ) {
     return false;   // file could not be opened
   }
 
 
-  return copyfile(file, incmap_[fil]); // insert element and delegate task
+  // insert element and delegate task
+  return copyfile(file, incmap_[fil]); 
 }
