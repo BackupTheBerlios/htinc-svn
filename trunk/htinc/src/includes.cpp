@@ -38,12 +38,14 @@ includes::includes(const std::string &incdir) : incdir_(incdir)   // C'tor
 struct structures::ret includes::operator() (structures::file & file,
        const list_type_::iterator & itr,
        const list_type_::iterator &itrend,
-       const std::string &incname, bool &modified) {
+       const std::string &incname, bool &modified,
+       int &writecount ) {
      // Argument 1: the List and Line Number Obj.  containing the source file
      // Argument 2: Iterator pointing to the first character of the include
      // Argument 3: Iterator pointing after the last character of the include
      // Argument 4: file name of the given include file
      // Argument 5: set to 'true' if list was changed (otherwise don't touch)
+     // Argument 6: number of characters inserted in place of include range
 
     // *** local variables
     structures::ret returnvalues;       // create return 'stack'
@@ -122,6 +124,9 @@ struct structures::ret includes::operator() (structures::file & file,
 
     // now insert new elements at the same position
     file.chars.insert(++itr_pref, inc_begin, inc_end);
+
+    // return number of charcters written
+    writecount = (*inc_pos).second.size();
 
     // return with everything OK
     returnvalues.val = structures::OK;

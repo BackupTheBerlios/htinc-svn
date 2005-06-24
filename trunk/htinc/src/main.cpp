@@ -32,7 +32,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>          // file stream
-#include <algorithm>        // copy
+#include <algorithm>        // copy, count
 #include <iterator>         // ostream_iterator
 
 #include "config.h"         // Settings from configure
@@ -212,7 +212,7 @@ struct structures::ret analysefile(const std::string &dateiname,
     if (setup::Message_Level >= structures::NORMAL) {    // print processed file
       std::cout << "process file: " << dateiname << " ("
 		<< distance(file.chars.begin(), file.chars.end())
-		<< " lines)\n";
+		<< " characters)\n";
     }
   } // End space for filestream
   
@@ -245,7 +245,7 @@ struct structures::ret analysefile(const std::string &dateiname,
     if (setup::Message_Level >= structures::NORMAL) {    // Status message
       std::cout << "   Updated Includes: " << upincs << std::endl; // updated includes
       std::cout << "   file modified: "  // file modified
-		<< distance(file.chars.begin(), file.chars.end())
+		<< 1+std::count(file.chars.begin(), file.chars.end(), '\n')
 		<< " lines written\n";
     }
   }
@@ -277,10 +277,6 @@ bool writebackfile(const structures::file &file,
   // copy
   std::copy(itr, itr_end, oo);
   
-  if (setup::Message_Level >= structures::DEBUG) {    // Debug
-    std::cout << "Debug (E): " << file.line.linecount()
-	      << " lines written back\n";
-  }
   return true;  // no error
 }
 

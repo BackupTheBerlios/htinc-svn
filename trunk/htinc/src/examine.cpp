@@ -72,6 +72,7 @@ struct structures::ret examine::operator() (
   bool first_upinc = true;   // true: insert first include into string upincs
   bool loc_changed;          // local change marker (to detect which include files
                              // were updated)
+  int insertcount;           // number of chars inserted upon include change
 
   // changed is false on first
   changed = false;
@@ -148,10 +149,18 @@ struct structures::ret examine::operator() (
 
     // else: OK - Call Includes Object
     loc_changed = false;
-    returnvalues = inc(f, isuf, ietag, incname, loc_changed);
+    returnvalues = inc(f, isuf, ietag, incname, loc_changed, insertcount);
 
     if (loc_changed == true) {  // include file was modified
       changed = true;      // save this
+
+      // first of all, transmit changes to linenum object
+      {
+	int tmp = std::distance(itrstart, isuf);        // start-position 
+	f.line.remove(tmp, std::distance(isuf, ietag) ); // removed range
+	f.line.insert(tmp, insertcount);   // added characters
+      }
+
       if (upincs.find(incname) == upincs.npos) { // name not yet saved
 	if (first_upinc == true) // first time
 	  first_upinc = false;   // save this call

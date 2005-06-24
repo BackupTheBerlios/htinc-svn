@@ -37,6 +37,9 @@ public:
 
   // The position count in the stream starts with Zero
 
+  // clear content and start new
+  void clear();
+
   // add newline at this position
   void add(const int);
      // Argument 1: Position
@@ -44,7 +47,12 @@ public:
   // remove range (e.g. for changing file content)
   void remove(const int, const int);
      // Argument 1: Start-Position (including)
-     // Argument 2: End-Position (not included)
+     // Argument 2: Number of characters removed
+
+  // insert range (e.g. for changing file content)
+  void insert(const int, const int);
+     // Argument 1: Start-Position (including)
+     // Argument 2: number of characters inserted
 
   // translates position to line number
   int operator() (const int) const;

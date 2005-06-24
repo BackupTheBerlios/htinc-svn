@@ -28,6 +28,15 @@
 //#include "globals.h" // Message-Level et al
 #include "linenum.h"
 
+
+
+// *** clear content and start new ***
+void clear() {
+
+ // now, only placeholder for the 'real' functionality
+}
+
+
 // *** add newline at this position ***
 void linenum::add(const int pos) {
      // Argument 1: Position
@@ -40,8 +49,19 @@ void linenum::add(const int pos) {
 
 // *** remove range (e.g. for changing file content) ***
 void linenum::remove(const int start, const int end) {
+  // remove range (e.g. for changing file content)
      // Argument 1: Start-Position (including)
-     // Argument 2: End-Position (not included)
+     // Argument 2: Number of characters removed
+
+
+  // now, only placeholder for the 'real' functionality
+}
+
+
+// *** insert range (e.g. for changing file content) ***
+void linenum::insert(const int start, const int count) {
+  // Argument 1: Start-Position (including)
+  // Argument 2: number of characters inserted
 
 
   // now, only placeholder for the 'real' functionality
