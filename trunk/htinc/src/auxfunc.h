@@ -22,11 +22,9 @@
 // *** Copy stream to list ***
 // Character by Character
 template<class LIST>
-bool copyfile(std::ifstream &fs, LIST & list, class linenum *line = NULL) {
+bool copyfile(std::ifstream &fs, LIST & list) {
   // Argument 1: File stream to read from
   // Argument 2: List to copy into
-  // Argument 3: Line Number Object to record the positions of
-  //             newlines, if it is not NULL
 
   list.clear();    // clear the list
   //  fs.clear();       // clear filestream error bits
@@ -44,9 +42,6 @@ bool copyfile(std::ifstream &fs, LIST & list, class linenum *line = NULL) {
     }   // else
     if ( fs.bad() ) {
       return false;        // Reading went wrong
-    }
-    if ( (line!=NULL) && (tchar == '\n') ) {     // record endline position
-      line->add(list.size() );
     }
     list.push_back(tchar);  // add char
   } 

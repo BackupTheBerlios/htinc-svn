@@ -25,6 +25,7 @@
 #ifndef LINENUM__H
 #define LINENUM__H
 
+#include "typedefs.h"    // type definitions
 
 class linenum {
 private:
@@ -37,12 +38,8 @@ public:
 
   // The position count in the stream starts with Zero
 
-  // clear content and start new
-  void clear();
-
-  // add newline at this position
-  void add(const int);
-     // Argument 1: Position
+  // initialise object with character stream
+  void init(const structures::filelist_type &in);
 
   // remove range (e.g. for changing file content)
   void remove(const int, const int);

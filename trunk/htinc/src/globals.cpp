@@ -41,7 +41,6 @@ const std::string Include_Tag_Start_e = "\"-->"; // tag's ending
   // Between tag's beginning and ending: filename of the include
   // Example: <!--INCLUDE="greetings.inc"-->
 const std::string Include_Tag_End = "<!--ENDINC-->"; // complete tag
-// Remark: Start/End - Tags need to be placed on a separate line
 
 
 

@@ -44,7 +44,6 @@ extern const std::string Include_Tag_Start_e;
   // Between tag's beginning and ending: filename of the include
   // Example: <!--INCLUDE="greetings.inc"-->
 extern const std::string Include_Tag_End; // complete tag
-// Remark: Start/End - Tags need to be placed on a separate line
 
 // *** various settings
 // Message Level can be modified by command line

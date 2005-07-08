@@ -204,11 +204,12 @@ struct structures::ret analysefile(const std::string &dateiname,
       // could open file
     
       // first of all: Copy the file into the list
-    if (copyfile(filestream, file.chars, &file.line) == false ) {
+    if (copyfile(filestream, file.chars) == false ) {
       retval.val = structures::ERR_READFILE;
       return retval;
     } // else: File copied into list
     filestream.close();    // now close file stream
+    file.line.init(file.chars); // now initialise line number object
     if (setup::Message_Level >= structures::NORMAL) {    // print processed file
       std::cout << "process file: " << dateiname << " ("
 		<< distance(file.chars.begin(), file.chars.end())

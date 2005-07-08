@@ -25,25 +25,18 @@
 // Includes
 
 #include "config.h"  // Settings from configure
-//#include "globals.h" // Message-Level et al
 #include "linenum.h"
 
 
 
-// *** clear content and start new ***
-void clear() {
+// *** initialise object with character stream ***
+void linenum::init(const structures::filelist_type &in) {
+  // object is also cleared beforehand
+
 
  // now, only placeholder for the 'real' functionality
 }
 
-
-// *** add newline at this position ***
-void linenum::add(const int pos) {
-     // Argument 1: Position
-
-  // now, only placeholder for the 'real' functionality
-
-}
 
 
 

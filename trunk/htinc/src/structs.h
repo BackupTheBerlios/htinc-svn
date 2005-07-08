@@ -4,7 +4,8 @@
 
  Created: 13.10.2k2
  last Modification: $LastChangedDate$
- Function: Declaration of globally used structures, enumerations and Typedefs
+ Function: Declaration of globally used structures, enumerations and
+           Typedefs (by including typedefs.h)
  
 
     This program is free software; you can redistribute it and/or modify
@@ -22,16 +23,11 @@
 #define STRUCTS__H
 
 #include <string>    // String
-#include <list>      // STL List
 
+#include "typedefs.h" // Type definitions
 #include "linenum.h" // Line Number Object
 
 namespace structures {
-
-  // *** Typedefs
-  // TODO: replace maybe by slist?
-  typedef std::list<char> filelist_type;  // List of the file's characters
-
 
   // File Stream and Line Number Object, passed to Examine Object
   struct file {
