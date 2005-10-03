@@ -27,16 +27,36 @@
 
 #include "typedefs.h"    // type definitions
 
+#include <list>  // single linked list
+
+
 class linenum {
 private:
 
-  // now, only placeholder for the 'real' functionality
+  // *** Typedefs
+  // the line number container
+  // TODO: slist sufficient?
+  typedef std::list<unsigned int> lnums_type_;
+  
+
+
+  // *** Variables
+  // List of line numbers
+  // Every index denotes a new line, the content
+  // is the offset to the previous lines in characters
+  // (including the newline in every line)
+  lnums_type_ lines_;
+
 
 public:
 
   explicit linenum() {};   // C'tor
 
-  // The position count in the stream starts with Zero
+  // The position count in the stream starts with Zero.
+  // The linenum object reflects the line number in the
+  // source file, before modifications.
+  // This should be noted in usage of the insert and
+  // remove members.
 
   // initialise object with character stream
   void init(const structures::filelist_type &in);
@@ -44,19 +64,19 @@ public:
   // remove range (e.g. for changing file content)
   void remove(const int, const int);
      // Argument 1: Start-Position (including)
-     // Argument 2: Number of characters removed
+     // Argument 2: number of characters removed
 
   // insert range (e.g. for changing file content)
   void insert(const int, const int);
      // Argument 1: Start-Position (including)
      // Argument 2: number of characters inserted
 
-  // translates position to line number
+  // translates position to line number (starting from 1)
   int operator() (const int) const;
-     // Argument 1: Position
+     // Argument 1: Position, starting from zero
 
   // return number of lines
-  int linecount () const;
+  //  int linecount () const;
 
 
 };          // class
