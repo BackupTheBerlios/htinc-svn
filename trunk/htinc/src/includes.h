@@ -59,11 +59,14 @@ public:
 
     struct structures::ret operator()
       (structures::file &,
-       const list_type_::iterator &, const list_type_::iterator &,
+       list_type_::iterator &, const list_type_::iterator &,
        const std::string &, bool &, int &);
      // Argument 1: the List and Line Number Obj.  containing the source file
      // Argument 2: Iterator pointing to the first character of the include
+     //             It is adjusted in the case of a removal to avoid
+     //             iterator invalidation
      // Argument 3: Iterator pointing after the last character of the include
+     //             Is still valid after exit
      // Argument 4: file name of the given include file
      // Argument 5: set to 'true' if list was changed (otherwise don't touch)
      // Argument 6: number of characters inserted in place of include range

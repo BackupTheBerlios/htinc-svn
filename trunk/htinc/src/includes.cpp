@@ -36,13 +36,16 @@ includes::includes(const std::string &incdir) : incdir_(incdir)   // C'tor
 
 // *** check the includes ***
 struct structures::ret includes::operator() (structures::file & file,
-       const list_type_::iterator & itr,
+       list_type_::iterator & itr,
        const list_type_::iterator &itrend,
        const std::string &incname, bool &modified,
        int &writecount ) {
      // Argument 1: the List and Line Number Obj.  containing the source file
      // Argument 2: Iterator pointing to the first character of the include
+     //             It is adjusted in the case of a removal to avoid
+     //             iterator invalidation
      // Argument 3: Iterator pointing after the last character of the include
+     //             Is still valid after exit
      // Argument 4: file name of the given include file
      // Argument 5: set to 'true' if list was changed (otherwise don't touch)
      // Argument 6: number of characters inserted in place of include range
@@ -118,12 +121,16 @@ struct structures::ret includes::operator() (structures::file & file,
     // one more time local variables
     list_type_::iterator itr_pref = itr;  // position one before start
     --itr_pref;                           // to escape invalidation at erase
+    list_type_::iterator itr_pref_ret = itr_pref; // for returning itr
 
     // clear all in-between elements
     file.chars.erase(itr, itrend);
 
     // now insert new elements at the same position
     file.chars.insert(++itr_pref, inc_begin, inc_end);
+
+    // revalidate itr
+    itr = ++itr_pref_ret;
 
     // return number of charcters written
     writecount = (*inc_pos).second.size();

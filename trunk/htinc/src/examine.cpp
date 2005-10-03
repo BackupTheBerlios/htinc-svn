@@ -73,6 +73,7 @@ struct structures::ret examine::operator() (
   bool loc_changed;          // local change marker (to detect which include files
                              // were updated)
   int insertcount;           // number of chars inserted upon include change
+  int removecount;           // number of chars removed upon include change
 
   // changed is false on first
   changed = false;
@@ -149,6 +150,7 @@ struct structures::ret examine::operator() (
 
     // else: OK - Call Includes Object
     loc_changed = false;
+    removecount = std::distance(isuf, ietag);// removed characters, if changed
     returnvalues = inc(f, isuf, ietag, incname, loc_changed, insertcount);
 
     if (loc_changed == true) {  // include file was modified
@@ -156,8 +158,8 @@ struct structures::ret examine::operator() (
 
       // first of all, transmit changes to linenum object
       {
-	int tmp = std::distance(itrstart, isuf);        // start-position 
-	f.line.remove(tmp, std::distance(isuf, ietag) ); // removed range
+	int tmp = std::distance(itrstart, isuf);        // start-position
+	f.line.remove(tmp, removecount);    // removed range
 	f.line.insert(tmp, insertcount);   // added characters
       }
 
