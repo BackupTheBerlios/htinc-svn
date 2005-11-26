@@ -42,15 +42,16 @@
 // *** Examine the file ***
 struct structures::ret examine::operator() (
 				   structures::file &f,
-				   includes &inc,
+				   tagprocessor &process,
 				   const structures::tags &tags,
 				   bool &changed,
-				   std::string & upincs) {
+				   std::string & upara) {
      // Argument 1: file which should be examined (as loaded list)
-     // Argument 2: Includes Object
+     // Argument 2: Tag processing object 
      // Argument 3: Structures with parsing definitions
      // Argument 4: true, if file was changed
-     // Argument 5: Name of changed include files, if Arg.4 is true
+     // Argument 5: Space separated Names of changed parameters
+     //             if Arg.4 is true, only needed for include object
 
 
   // return structure
@@ -68,8 +69,8 @@ struct structures::ret examine::operator() (
             ipref, // Iterator, found start tag prefix
             isuf,  // Iterator, found start tag suffix
             ietag; // Iterator, end tag
-  std::string incname;       // Name of the include file
-  bool first_upinc = true;   // true: insert first include into string upincs
+  std::string pname;       // Name of the parameter
+  bool first_upara = true;   // true: insert first parameter into string upara
   bool loc_changed;          // local change marker (to detect which include files
                              // were updated)
   int insertcount;           // number of chars inserted upon include change
@@ -77,7 +78,7 @@ struct structures::ret examine::operator() (
 
   // changed is false on first
   changed = false;
-  upincs.clear();            // clear return string
+  upara.clear();            // clear return string
 
   // scan list, until a Include Start-Tag is found (save pos as ipref)
   while (itrend != (ipref = std::search(itr, itrend,
@@ -108,17 +109,17 @@ struct structures::ret examine::operator() (
 	std::cout << "Debug (E): ... and start tag's ending\n";
       }
       // now extract the include's name
-      incname.assign(ipref, isuf);
+      pname.assign(ipref, isuf);
       // Check 1: no empty string?
-      if (incname.empty() == true) { // Error: include name is empty
+      if (pname.empty() == true) { // Error: parameter name is empty
 	// fill return structure
-	returnvalues.val = structures::ERR_MISSING_INCNAME;
+	returnvalues.val = structures::ERR_MISSING_PARANAME;
 	// Error in line xxx
 	returnvalues.line = f.line(std::distance(itrstart, --ipref) );
 	return returnvalues;    // and exit
       }
       // Check 2: no newline character included
-      if (incname.find('\n') != incname.npos) {
+      if (pname.find('\n') != pname.npos) {
 	// means not valid, just continue
 	if (setup::Message_Level >= structures::DEBUG) {    // Debug
 	  std::cout << "Debug (E): ... newline in parameter encountered, therefore ignoring\n";
@@ -128,12 +129,12 @@ struct structures::ret examine::operator() (
 	continue;
       } // else: All checks passed
       if (setup::Message_Level >= structures::DEBUG) {    // Debug
-	std::cout << "Debug (E): include name: " << incname << '\n';
+	std::cout << "Debug (E): parameter name: " << pname << '\n';
       }
       // let isuf point after the start tag suffix
       std::advance(isuf, tags.start_suffix.size() );
     } else {   // we have no parameter
-      incname.clear();       // it's empty, of course
+      pname.clear();       // it's empty, of course
       // let isuf point after the start tag prefix
       isuf = ipref;
     }
@@ -151,7 +152,7 @@ struct structures::ret examine::operator() (
     // else: OK - Call Includes Object
     loc_changed = false;
     removecount = std::distance(isuf, ietag);// removed characters, if changed
-    returnvalues = inc(f, isuf, ietag, incname, loc_changed, insertcount);
+    returnvalues = process(f, isuf, ietag, pname, loc_changed, insertcount);
 
     if (loc_changed == true) {  // include file was modified
       changed = true;      // save this
@@ -163,13 +164,13 @@ struct structures::ret examine::operator() (
 	f.line.insert(tmp, insertcount);   // added characters
       }
 
-      if (upincs.find(incname) == upincs.npos) { // name not yet saved
-	if (first_upinc == true) // first time
-	  first_upinc = false;   // save this call
+      if (upara.find(pname) == upara.npos) { // name not yet saved
+	if (first_upara == true) // first time
+	  first_upara = false;   // save this call
 	else
-	  upincs += ' ';          // add a space
-	upincs += incname;    // add include name to changelist
-      }  // End if (upincs.find(incname) == upincs.npos)
+	  upara += ' ';          // add a space
+	upara += pname;    // add include name to changelist
+      }  // End if (upara.find(pname) == upara.npos)
     } // End if (loc_changed == true)
     if (returnvalues.val  != structures::OK) { // some error was encountered
       return returnvalues;    // just pass the error code back to caller

@@ -136,17 +136,18 @@ int main(int argc, char **argv) {
      // Error: bad file
      return structures::exit_codes(structures::BAD_FILE);
      break;
-  case structures::ERR_MISSING_INCNAME:  // Include Tag lacks a file name
-    cerr << "Error: Include-Tag in line "<< retval.line
-	 << " lacks an file name!\n\n";
+  case structures::ERR_MISSING_PARANAME:  // Tag lacks a mandatory parameter
+    cerr << "Error: Tag in line "<< retval.line
+
+	 << " lacks a parameter!\n\n";
     // Error: Tags invalid
-     return structures::exit_codes(structures::NO_INC_NAME);
+     return structures::exit_codes(structures::NO_PARA_NAME);
      break;
   case structures::ERR_MISSING_ENDTAG:  // no End Tag
-    cerr << "Error: No End-Tag found for Include-Tag in line "<< retval.line
+    cerr << "Error: No End-Tag found for Tag in line "<< retval.line
 	 << "!\n\n";
     // Error: Tags invalid
-     return structures::exit_codes(structures::NO_INC_NAME);
+     return structures::exit_codes(structures::NO_PARA_NAME);
      break;
   case structures::ERR_LOADING_INC:  // Include could not be opened
      cerr << "Error: unable to load include File "

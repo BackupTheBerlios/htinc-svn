@@ -41,10 +41,11 @@ namespace structures {
     ERR_OPEN_FILE, // File could not be opened
     ERR_READFILE,  // Filestream could not be read
     ERR_WRITEFILE,  // changed file could not be written back to filestream
-    ERR_MISSING_INCNAME, // Include Tag lacks an file name (line)
-    ERR_MISSING_ENDTAG,  // no end tag found (text: Include's name)
+    ERR_MISSING_PARANAME, // Tag lacks an mandatory parameter (line)
+    ERR_MISSING_ENDTAG,  // no end tag found (text: parameter name)
                          // (line: Start Tag's line)
     ERR_LOADING_INC // Include file could not be loaded (text: Include's name)
+                    // only for include object
   };
 
   // Return Structure: Contains Return Value and additional information
@@ -78,7 +79,7 @@ namespace structures {
     WRONG_PARAS=1,   // wrong parameters or options
     ERR_OPEN=2,      // error opening a file
     BAD_FILE=3,      // bad file
-    NO_INC_NAME=4,   // Start Tag lacks an include file name
+    NO_PARA_NAME=4,  // Start Tag lacks an parameter name
     BAKA=99          // internal (i. e. unexpected) error
   };
 

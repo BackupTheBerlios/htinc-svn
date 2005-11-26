@@ -26,7 +26,7 @@
 
 #include "includes.h"   // Declaration of the Include Object
 #include "structs.h"    // including the return struct
-
+#include "tagprocessor.h"  // base class for tag processing objects
 
 
 
@@ -40,15 +40,16 @@ public:
 
   // do examination
   struct structures::ret operator() (structures::file &,
-				     includes &,
+				     tagprocessor &,
 				     const structures::tags &,
 				     bool &,
 				     std::string &);
      // Argument 1: file which should be examined (as loaded list)
-     // Argument 2: Includes Object
+     // Argument 2: Tag processing object 
      // Argument 3: Structures with parsing definitions
      // Argument 4: true, if file was changed
-     // Argument 5: Name of changed include files, if Arg.4 is true
+     // Argument 5: Space separated Names of changed parameters
+     //             if Arg.4 is true, only needed for include object
 
 
 

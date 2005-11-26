@@ -32,8 +32,6 @@ includes::includes(const std::string &incdir) : incdir_(incdir)   // C'tor
      // Argument: Include-Directory
 {}
 
-
-
 // *** check the includes ***
 struct structures::ret includes::operator() (structures::file & file,
        list_type_::iterator & itr,

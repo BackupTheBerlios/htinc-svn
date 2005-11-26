@@ -29,11 +29,10 @@
 #include <map>            // Storing the Include files
 #include <iostream>      // Debug Messages
 
-#include "structs.h"   // including the return struct
+#include "tagprocessor.h"  // base class for includes object
 
-
-
-class includes {
+// Derive from base class tagprocessor
+class includes : public tagprocessor {
 private:
   // typedef's
   typedef std::vector<char> inc_type_;  // List of the file's lines
@@ -51,13 +50,10 @@ private:
 
 public:
 
-  // typedef as shortcut
-  typedef structures::filelist_type list_type_;
-
   explicit includes(const std::string &);   // C'tor
      // Argument: Include-Directory
 
-    struct structures::ret operator()
+  struct structures::ret operator()
       (structures::file &,
        list_type_::iterator &, const list_type_::iterator &,
        const std::string &, bool &, int &);
