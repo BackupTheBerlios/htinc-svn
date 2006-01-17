@@ -69,6 +69,4 @@ public:
 
 };    // End class includes
 
-// #include "includes.n"   /// just include the template definition
-
 #endif     // End Header Guard

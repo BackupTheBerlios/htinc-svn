@@ -132,7 +132,7 @@ void linenum::insert(const int start, const int count) {
 }
 
 
-// *** translates position to line number  (starting from 1) ***
+// *** translates position to line number ***
 int linenum::operator() (const int pos) const {
      // Argument 1: Position, starting from zero
 
@@ -156,9 +156,3 @@ int linenum::operator() (const int pos) const {
   // Return result
   return line;
 }
-
-
-// *** return number of lines ***
-//int linenum::linecount () const {
-//  return 0;  // Dummy
-//}

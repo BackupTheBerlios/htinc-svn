@@ -71,7 +71,7 @@ public:
      // Argument 1: Start-Position (including)
      // Argument 2: number of characters inserted
 
-  // translates position to line number (starting from 1)
+  // translates position to line number
   int operator() (const int) const;
      // Argument 1: Position, starting from zero
 
