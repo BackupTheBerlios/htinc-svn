@@ -42,6 +42,17 @@ const std::string Include_Tag_Start_e = "\"-->"; // tag's ending
   // Example: <!--INCLUDE="greetings.inc"-->
 const std::string Include_Tag_End = "<!--ENDINC-->"; // complete tag
 
+// HTML-Tags for Date Tags
+const std::string Datetag_Tag_Start_s = "<!--INCLUDEDATE-->"; // tag's beginning
+const std::string Datetag_Tag_Start_e;
+  // no start-end tag means no parameter included
+const std::string Datetag_Tag_End = "<!--ENDINC-->"; // complete tag
+
+// HTML-Tags for Embedded Meta Date Tag
+const std::string Datemeta_Tag_Start_s = "<meta name=\"date\" content=\""; // tag's beginning
+const std::string Datemeta_Tag_Start_e;
+  // no start-end tag means no parameter included
+const std::string Datemeta_Tag_End = "\">"; // complete tag
 
 
 // various settings

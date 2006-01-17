@@ -45,6 +45,19 @@ extern const std::string Include_Tag_Start_e;
   // Example: <!--INCLUDE="greetings.inc"-->
 extern const std::string Include_Tag_End; // complete tag
 
+// HTML-Tags for Date Tags
+extern const std::string Datetag_Tag_Start_s;
+extern const std::string Datetag_Tag_Start_e;
+  // no parameter included
+extern const std::string Datetag_Tag_End; // complete tag
+
+// HTML-Tags for Embedded Meta Date Tag
+extern const std::string Datemeta_Tag_Start_s;
+extern const std::string Datemeta_Tag_Start_e;
+  // no parameter included
+extern const std::string Datemeta_Tag_End; // complete tag
+
+
 // *** various settings
 // Message Level can be modified by command line
 extern structures::msg_level Message_Level;  // the Message Level to Use

@@ -49,10 +49,9 @@ struct structures::ret examine::operator() (
      // Argument 1: file which should be examined (as loaded list)
      // Argument 2: Tag processing object 
      // Argument 3: Structures with parsing definitions
-     // Argument 4: true, if file was changed
+     // Argument 4: Set to true when file was changed,
+     //             otherwise not touched
      // Argument 5: Space separated Names of changed parameters
-     //             if Arg.4 is true, only needed for include object
-
 
   // return structure
   struct structures::ret returnvalues;
@@ -76,8 +75,6 @@ struct structures::ret examine::operator() (
   int insertcount;           // number of chars inserted upon include change
   int removecount;           // number of chars removed upon include change
 
-  // changed is false on first
-  changed = false;
   upara.clear();            // clear return string
 
   // scan list, until a Include Start-Tag is found (save pos as ipref)
@@ -149,7 +146,7 @@ struct structures::ret examine::operator() (
 	return returnvalues;      // signal error
     } // else: Valid Endtag
 
-    // else: OK - Call Includes Object
+    // else: OK - Call Processing Object
     loc_changed = false;
     removecount = std::distance(isuf, ietag);// removed characters, if changed
     returnvalues = process(f, isuf, ietag, pname, loc_changed, insertcount);

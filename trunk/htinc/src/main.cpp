@@ -34,12 +34,15 @@
 #include <fstream>          // file stream
 #include <algorithm>        // copy, count
 #include <iterator>         // ostream_iterator
+#include <sstream>          // stringstreams
+#include <time.h>           // current date
 
 #include "config.h"         // Settings from configure
 #include "structs.h"        // including the return struct und return values
 #include "globals.h"        // Settings and Command Line Options
 #include "examine.h"        // Header for the examine object
 #include "includes.h"       // Header for the Include Object
+#include "date.h"           // Header for the Date Object
 #include "parseargs.h"      // command line arguments parser
 #include "auxfunc.h"        // for copyfile function
 
@@ -183,13 +186,14 @@ struct structures::ret analysefile(const std::string &dateiname,
 
 
   // "global" variables
-  std::string upincs;             // contain the name of all updated
+  std::string upincs;       // contain the name of all updated
                             // include files (from examine object)
+  std::string update;       // updated date tags; ignore
   structures::file file;    // the file's representation with line numbers
   
   structures::ret retval;         // return variable
-  structures::tags tags;          // Tags to work with
-  bool changed=false;             // Record whether file was modified
+  bool inc_changed=false;         // Record whether file's includes were modified
+  bool date_changed=false;        // Record whether file's dates were modified
 
   // set default error return
   retval.val = structures::OK;       // no error
@@ -221,9 +225,12 @@ struct structures::ret analysefile(const std::string &dateiname,
 
 
   // *** examine object
-  {  // space for the examination
-    examine ex;   // create examine object
+  // Further Variables
+  examine ex;   // create examine object
+  structures::tags tags;          // Tags to work with
 
+  // *** include
+  {  // space for the include file processing
     // create includes object
     includes inc(incdir);
     // Fill Tags structure
@@ -232,20 +239,80 @@ struct structures::ret analysefile(const std::string &dateiname,
     tags.end=setup::Include_Tag_End;
 
     // do examination with includes object
-    retval = ex(file, inc, tags, changed, upincs);
-  } // End space examine object
+    retval = ex(file, inc, tags, inc_changed, upincs);
 
+    // check: okay?
+    if (retval.val != structures::OK) {
+      return retval;          // not okay - bail out
+    }
+  } // End space include object
+
+  // *** date
+  {  // space for the date processing
+    // variables
+    std::string curdate;       // hold current date in GMT
+    std::stringstream strstream;   // Stringstream zum Konvertieren
+
+
+    // generate current date in the form YYYY-MM-DD
+    std::time_t today_time = std::time(NULL);       // today as calendar time
+    struct std::tm *today = std::gmtime(&today_time); // today in GMT
+    // year
+    // CONTINUE
+    // (1900+today.tm_year)
+    // month
+    // day 
+    strstream << 1900+today->tm_year
+	      << '-'
+	      << 1+today->tm_mon
+	      << '-'
+	      << today->tm_mday;
+    curdate = strstream.str();
+
+    // create date object
+    date dt(curdate);
+
+    // Process normal date tag
+    // Fill Tags structure
+    tags.start_prefix=setup::Datetag_Tag_Start_s;
+    tags.start_suffix=setup::Datetag_Tag_Start_e;
+    tags.end=setup::Datetag_Tag_End;
+    // do examination with date object
+    retval = ex(file, dt, tags, date_changed, update);
+    // check: okay?
+    if (retval.val != structures::OK) {
+      return retval;          // not okay - bail out
+    }
+
+    // Process embedded date tag
+    // Fill Tags structure
+    tags.start_prefix=setup::Datemeta_Tag_Start_s;
+    tags.start_suffix=setup::Datemeta_Tag_Start_e;
+    tags.end=setup::Datemeta_Tag_End;
+    // do examination with date object
+    retval = ex(file, dt, tags, date_changed, update);
+    // check: okay?
+    if (retval.val != structures::OK) {
+      return retval;          // not okay - bail out
+    }
+
+  } // End space date object
 
   // *** Write back file, if needed
   // and no error occured before
-  if ( (retval.val == structures::OK) && (changed)  ) {
+  if ( (retval.val == structures::OK) && (inc_changed || date_changed)  ) {
     // yes - write it back
     if (writebackfile(file, dateiname) == false ) {
       retval.val = structures::ERR_WRITEFILE;    // error writing back!
       return retval;
     } // else: // okay
     if (setup::Message_Level >= structures::NORMAL) {    // Status message
-      std::cout << "   Updated Includes: " << upincs << std::endl; // updated includes
+      if (inc_changed) {
+	std::cout << "   Updated Includes: " << upincs << std::endl; // updated includes
+      }
+      if (date_changed) {
+	std::cout << "   Updated Date Tags" << std::endl; // updated date
+      }
       std::cout << "   file modified: "  // file modified
 		<< 1+std::count(file.chars.begin(), file.chars.end(), '\n')
 		<< " lines written\n";

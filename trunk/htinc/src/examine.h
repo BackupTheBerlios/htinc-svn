@@ -47,9 +47,9 @@ public:
      // Argument 1: file which should be examined (as loaded list)
      // Argument 2: Tag processing object 
      // Argument 3: Structures with parsing definitions
-     // Argument 4: true, if file was changed
+     // Argument 4: Set to true when file was changed,
+     //             otherwise not touched
      // Argument 5: Space separated Names of changed parameters
-     //             if Arg.4 is true, only needed for include object
 
 
 

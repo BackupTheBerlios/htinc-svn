@@ -8,7 +8,7 @@ htinc_SOURCES = auxfunc.h \
      globals.h globals.cpp \
      parseargs.h parseargs.cpp \
      linenum.h linenum.cpp \
-     tagprocessor.h includes.h includes.cpp 
+     tagprocessor.h includes.h includes.cpp date.h date.cpp
 
 # include debugging code if wanted (DEBUG comes from configure)
 if DEBUG
