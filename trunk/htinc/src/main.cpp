@@ -262,11 +262,15 @@ struct structures::ret analysefile(const std::string &dateiname,
     // (1900+today.tm_year)
     // month
     // day 
+    strstream.fill('0');     // pad with zeros
+    strstream.width(4);      // Year: 4 digits
     strstream << 1900+today->tm_year
-	      << '-'
-	      << 1+today->tm_mon
-	      << '-'
-	      << today->tm_mday;
+	      << '-';
+    strstream.width(2);      // Month: 2 digits
+    strstream << 1+today->tm_mon
+	      << '-';
+    strstream.width(2);      // Day: 2 digits
+    strstream << today->tm_mday;
     curdate = strstream.str();
 
     // create date object
