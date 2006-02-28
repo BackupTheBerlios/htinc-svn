@@ -7,7 +7,7 @@ Then just enter the root directory (where the file 'configure.ac'
 is located) and type 'autoreconf'. This should run all necessary tools
 in the right order to generate the configure-script and the
 Makefiles's.
-I am using autoconf 2.59 and automake 1.9.5, but most usually other
+I am using autoconf 2.59 and automake 1.9.6, but most usually other
 versions will also suffice.
 
 If you have problems bootstrapping (or at any other point), please
