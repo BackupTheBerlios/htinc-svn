@@ -1,6 +1,6 @@
 /* Name: ''includes.cpp''
   Project: HTML Include
- Copyright (C) 2002 MadDog/Robert Lange
+ Copyright (C) 2002,2005 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 13.10.2k2
  last Modification: $LastChangedDate$

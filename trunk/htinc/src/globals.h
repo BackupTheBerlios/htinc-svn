@@ -1,6 +1,6 @@
 /* Name: ''globals.h''
   Project: HTML Include
- Copyright (C) 2002 MadDog/Robert Lange
+ Copyright (C) 2002,2005 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 25.03.2k5
  last Modification: $LastChangedDate: 2005-03-23 18:51:35 +0100 (Wed, 23 Mar 2005) $

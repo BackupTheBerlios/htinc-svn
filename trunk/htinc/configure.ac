@@ -1,6 +1,8 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
-# last modification: $LastChangedDate$
+#
+# Copyright (C) 2005 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
+# last Modification: $LastChangedDate$
 
 
 # *** Initialization

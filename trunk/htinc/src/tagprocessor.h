@@ -1,6 +1,6 @@
 /* Name: ''tagprocessor.h''
   Project: HTML Include
- Copyright (C) 2005 Robert Lange
+ Copyright (C) 2005,2006 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 20.11.2k5
  last Modification: $LastChangedDate$

@@ -1,6 +1,6 @@
 /* Name: ''date.cpp''
  Project: HTML Include
- Copyright (C) 2002,2005 MadDog/Robert Lange
+ Copyright (C) 2002,2005,2006 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 03.12.2k5
  last Modification: $LastChangedDate$

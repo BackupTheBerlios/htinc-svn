@@ -1,6 +1,6 @@
 /* Name: ''typedefs.h''
   Project: HTML Include
- Copyright (C) 2005 MadDog/Robert Lange
+ Copyright (C) 2005 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 26.06.2k5
  last Modification: $LastChangedDate$

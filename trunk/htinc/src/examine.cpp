@@ -1,6 +1,6 @@
 /* Name: ''examine.cpp''
   Project: HTML Include
- Copyright (C) 2002 MadDog/Robert Lange
+ Copyright (C) 2002,2005,2006 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 12.10.2k2
  last Modification: $LastChangedDate$

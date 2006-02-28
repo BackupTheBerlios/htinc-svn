@@ -1,4 +1,7 @@
 # Makefile template for the program
+#
+# Copyright (C) 2005 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
+# last Modification: $LastChangedDate$
 
 # program generated
 bin_PROGRAMS = htinc

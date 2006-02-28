@@ -1,6 +1,6 @@
 /* Name: ''linenum.h''
   Project: HTML Include
- Copyright (C) 2005 MadDog/Robert Lange
+ Copyright (C) 2005,2006 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 21.04.2k5
  last Modification: $LastChangedDate$

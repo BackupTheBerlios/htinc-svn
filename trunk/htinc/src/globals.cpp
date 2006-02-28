@@ -1,6 +1,6 @@
 /* Name: ''globals.cpp''
   Project: HTML Include
- Copyright (C) 2002 MadDog/Robert Lange
+ Copyright (C) 2002,2005,2006 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 25.03.2k5 (from main.h)
  last Modification: $LastChangedDate$
