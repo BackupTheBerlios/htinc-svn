@@ -1,7 +1,7 @@
 /*
 file name: ''parseargs.h''
   project: HTML Include
- Copyright (C) 2005 Robert Lange
+ Copyright (C) 2005,2006 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 26.03.2k5 (from project CNSIM)
  last Modification: $LastChangedDate$
@@ -22,6 +22,8 @@ file name: ''parseargs.h''
 #ifndef PARSEARGS__H
 #define PARSEARGS__H
 
+#include <string>
+#include <vector>
 
 namespace parseargs {
 
@@ -30,14 +32,16 @@ namespace parseargs {
 struct arguments
 {
   // constructor (clears everything)
-  arguments() : debug(false),quiet(false),
-		file(NULL), incdir(NULL) {};
+  arguments() : debug(false),quiet(false) {};
+  // typedef: File(s) to Process
+  typedef std::vector<std::string> file_type;
+
   // variables
   bool debug;
   bool quiet;
   // values
-  char *file;                // arg, mantadory
-  char *incdir;              // include directory
+  file_type file;                // file(s), mantadory
+  std::string incdir;            // include directory
 };
 
 

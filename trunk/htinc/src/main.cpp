@@ -1,6 +1,6 @@
 /* Name: ''main.cpp''
   Project: HTML Include
- Copyright (C) 2002 MadDog/Robert Lange
+ Copyright (C) 2002,2005,2006 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 12.10.2k2
  last Modification: $LastChangedDate$
@@ -23,10 +23,6 @@
     GNU General Public License for more details.
 */
 
-/* Erweiterungen:
-- mehrere Include-Verzeichnisse angebbar
-- mehrere Dateinamen angebbar
-*/
 
 
 #include <iostream>
@@ -65,12 +61,19 @@ namespace {     // anonymous namespace
 		     const std::string &);
       // Argument 1: List of File Characters and Line Number Object
       // Argument 2: File name to copy to
+      // return: True on Success
+
+  // Error Output on Failure or OK
+  int error_output(const structures::ret & retval);
+      // Argument: Return Structure
+      // return: Error code which should be returned to the Shell
 }
 
 int main(int argc, char **argv) {
 
   // "global" variables
-  std::string dateiname;          // the file to read
+  parseargs::arguments::file_type file_list;          // the file(s) to read
+  std::string dateiname;                        // file under process
   std::string incdir;             // include directory
   structures::ret retval;         // return variable
 
@@ -91,7 +94,7 @@ int main(int argc, char **argv) {
     }
 
     // Option Include not found?
-    if ( options.incdir == NULL ) {
+    if ( options.incdir.size() == 0 ) {
       // set to default directory
       incdir = setup::Default_Inc_Dir;
     } else {
@@ -101,7 +104,7 @@ int main(int argc, char **argv) {
 
     // everything OK!
     // now get also the file name
-    dateiname = options.file;
+    file_list = options.file;
   } // End of Command Line space
 
 
@@ -109,65 +112,43 @@ int main(int argc, char **argv) {
     cout << setup::Copyright << endl << endl;
 
 
+  // *** More Variables: Iterators for file list
+  // begin iterator
+  parseargs::arguments::file_type::const_iterator beg;
+  // end iterator
+  const parseargs::arguments::file_type::const_iterator end = file_list.end();
+
+  // *** Check existence of all files in advance
+  for (beg = file_list.begin(); beg != end; ++beg) {
+    std::ifstream filestream(beg->c_str() );   // open file
+    if ( !(filestream) || !(filestream.is_open()) ) {
+      // file could not be opened
+      structures::ret retval;         // return variable
+      retval.val = structures::ERR_OPEN_FILE;  // signal error type
+      retval.text = *beg;                    // hand over file name
+      // hand over to error function and exit
+      return error_output(retval);
+    } // else
+    filestream.close();    // close again
+  }
+
+
   // *** do the whole examination
-  retval = analysefile(dateiname, incdir);
-  cout.flush();        // and flush cout, just in case of following error
+  // for all files
+  for (beg = file_list.begin(); beg != end; ++beg) {
+    dateiname = *beg;        // assign file name
 
+    retval = analysefile(dateiname, incdir);
+    cout.flush();        // and flush cout, just in case of following error
 
-  // *** parse return values
-  switch ( retval.val ) {
-  case structures::OK:
-    if (setup::Message_Level >= structures::DEBUG)    // issue Finish
-      cout << "Finished\n";
-    return structures::exit_codes(structures::NO_ERR); // No Error
-    break;
-  case structures::ERR_OPEN_FILE:  // file could not be opened
-     cerr << "Error: invalid input file; unable to open file "
-          << dateiname << "!\n\n";
-     // Error: file could not be opened
-     return structures::exit_codes(structures::ERR_OPEN);
-     break;
-  case structures::ERR_READFILE:  // file could not be read
-     cerr << "Error: unable to read from input file "
-          << dateiname << "!\n\n";
-     // Error: bad file
-     return structures::exit_codes(structures::BAD_FILE);
-     break;
-  case structures::ERR_WRITEFILE:  // could not write to file
-     cerr << "Error: unable to write to file "
-          << dateiname << "!\n\n";
-     // Error: bad file
-     return structures::exit_codes(structures::BAD_FILE);
-     break;
-  case structures::ERR_MISSING_PARANAME:  // Tag lacks a mandatory parameter
-    cerr << "Error: Tag in line "<< retval.line
+    if (retval.val != structures::OK ) {    // error occured
+      // hand over to error function and exit
+      return error_output(retval);
+    }
+  } // End for
 
-	 << " lacks a parameter!\n\n";
-    // Error: Tags invalid
-     return structures::exit_codes(structures::NO_PARA_NAME);
-     break;
-  case structures::ERR_MISSING_ENDTAG:  // no End Tag
-    cerr << "Error: No End-Tag found for Tag in line "<< retval.line
-	 << "!\n\n";
-    // Error: Tags invalid
-     return structures::exit_codes(structures::NO_PARA_NAME);
-     break;
-  case structures::ERR_LOADING_INC:  // Include could not be opened
-     cerr << "Error: unable to load include File "
-          << retval.text << "!\n\n";
-     // Error: file could not be opened
-     return structures::exit_codes(structures::ERR_OPEN);
-     break;
-
-  default:  // unexpected error
-    cerr << "internal Error encountered!"
-	 << "\n(unexpected return value from examine object)\n"
-	 << "Please contact programmer about this issue.\n";
-    // internal error
-    return structures::exit_codes(structures::BAKA);
-    break;
-  } // End switch
-
+  // Everything okay? Then end program without error
+  return structures::exit_codes(structures::NO_ERR);
 
 }  // End main
 
@@ -201,9 +182,10 @@ struct structures::ret analysefile(const std::string &dateiname,
 
   // *** load file into list
   { // space for filestream
-    std::ifstream filestream(dateiname.c_str());   // open file for Input
+    std::ifstream filestream(dateiname.c_str() );   // open file for Input
     if ( !(filestream) || !(filestream.is_open()) ) { // file could not be opened
       retval.val = structures::ERR_OPEN_FILE;  // signal error type
+      retval.text = dateiname;                    // hand over file name
       return retval;
     } // else
       // could open file
@@ -211,6 +193,7 @@ struct structures::ret analysefile(const std::string &dateiname,
       // first of all: Copy the file into the list
     if (copyfile(filestream, file.chars) == false ) {
       retval.val = structures::ERR_READFILE;
+      retval.text = dateiname;                    // hand over file name
       return retval;
     } // else: File copied into list
     filestream.close();    // now close file stream
@@ -308,6 +291,7 @@ struct structures::ret analysefile(const std::string &dateiname,
     // yes - write it back
     if (writebackfile(file, dateiname) == false ) {
       retval.val = structures::ERR_WRITEFILE;    // error writing back!
+      retval.text = dateiname;                    // hand over file name
       return retval;
     } // else: // okay
     if (setup::Message_Level >= structures::NORMAL) {    // Status message
@@ -353,5 +337,66 @@ bool writebackfile(const structures::file &file,
   return true;  // no error
 }
 
+
+
+// *** Error Output on Failure or OK ***
+int error_output(const structures::ret & retval) {
+  // Argument: Return Structure
+  // return: Error code which should be returned to the Shell
+
+  // *** parse return values
+  switch ( retval.val ) {
+  case structures::OK:
+    if (setup::Message_Level >= structures::DEBUG)    // issue Finish
+      cout << "Finished\n";
+    return structures::exit_codes(structures::NO_ERR);
+    break;
+  case structures::ERR_OPEN_FILE:  // file could not be opened
+     cerr << "Error: invalid input file; unable to open file "
+          << retval.text << "!\n\n";
+     // Error: file could not be opened
+     return structures::exit_codes(structures::ERR_OPEN);
+     break;
+  case structures::ERR_READFILE:  // file could not be read
+     cerr << "Error: unable to read from input file "
+          << retval.text << "!\n\n";
+     // Error: bad file
+     return structures::exit_codes(structures::BAD_FILE);
+     break;
+  case structures::ERR_WRITEFILE:  // could not write to file
+     cerr << "Error: unable to write to file "
+          << retval.text << "!\n\n";
+     // Error: bad file
+     return structures::exit_codes(structures::BAD_FILE);
+     break;
+  case structures::ERR_MISSING_PARANAME:  // Tag lacks a mandatory parameter
+    cerr << "Error: Tag in line "<< retval.line
+
+	 << " lacks a parameter!\n\n";
+    // Error: Tags invalid
+     return structures::exit_codes(structures::NO_PARA_NAME);
+     break;
+  case structures::ERR_MISSING_ENDTAG:  // no End Tag
+    cerr << "Error: No End-Tag found for Tag in line "<< retval.line
+	 << "!\n\n";
+    // Error: Tags invalid
+     return structures::exit_codes(structures::NO_PARA_NAME);
+     break;
+  case structures::ERR_LOADING_INC:  // Include could not be opened
+     cerr << "Error: unable to load include File "
+          << retval.text << "!\n\n";
+     // Error: file could not be opened
+     return structures::exit_codes(structures::ERR_OPEN);
+     break;
+
+  default:  // unexpected error
+    cerr << "internal Error encountered!"
+	 << "\n(unexpected return value from examine object)\n"
+	 << "Please contact programmer about this issue.\n";
+    // internal error
+    return structures::exit_codes(structures::BAKA);
+    break;
+  } // End switch
+}
 
 }         // anonymous namespace

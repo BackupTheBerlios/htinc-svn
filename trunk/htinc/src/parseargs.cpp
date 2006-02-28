@@ -1,7 +1,7 @@
 /*
 file name: ''parseargs.h''
   project: HTML Include
- Copyright (C) 2005 Robert Lange
+ Copyright (C) 2005,2006 Robert Lange <robert.lange@s1999.tu-chemnitz.de>
 
  Created: 26.03.2k5 (from project CNSIM)
  last Modification: $LastChangedDate$
@@ -97,13 +97,13 @@ static char doc[] =
 ;
      
 /* name of the arguments we accept. */
-static char args_doc[] = "file_to_process";
+static char args_doc[] = "file(s)_to_process";
 
 /* The options we understand. */
 static struct argp_option options[] = {
   {"debug",    'd', 0,      0,  "Enable debug messages" },
   {"quiet",    'q', 0,      0,  "Print only error messages" },
-  {"include",  'i', "f", 0, 
+  {"include",  'i', "incdir", 0, 
    "directory (relative to current directory) where the include "
     "files should be searched (with slash at the end)" },
   // we automatically understand shortings of long options
@@ -133,22 +133,14 @@ static struct argp_option options[] = {
 	break;
      
       case ARGP_KEY_ARG:
-	if (state->arg_num >= 1)
-	  // Too many arguments
-	  argp_error (state, "too many arguments");
-	// argp_usage (state);
-     	arguments->file = arg;
+	// add file to files to process - list
+     	arguments->file.push_back(arg);
      	break;
      
       case ARGP_KEY_END: // tests
 	if (state->arg_num < 1)
 	  /* Not enough arguments. */
 	  argp_usage (state);
-	  /*	if (arguments->incdir == NULL)
-	  // deal with missing include dir in main.cpp
-	  // Include dir missing
-	  argp_error (state, "option required -- include");
-	  */
 	break;
      
       default:
