@@ -1,0 +1,18 @@
+Open Points
+***********
+
+
+- add command line to select which modules (include, date) should
+  be active
+
+- only update the date tag when it differs from
+  the file modification time (or any other update by htinc
+  took place)
+
+- specify more than one include directory on command line
+
+- write man page
+
+- work on TODO's in source code
+
+$LastChangesDate$
