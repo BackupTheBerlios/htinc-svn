@@ -15,12 +15,15 @@ AC_PREREQ(2.59)
 # Automake: create distribution with bzip2, no GNU program
 AM_INIT_AUTOMAKE(dist-bzip2 no-dist-gzip foreign)
 
+
 # *** Some Configurations
 # some file that is in the package's source directory
 AC_CONFIG_SRCDIR(src/examine.h)
-# set CXXFLAGS for C++ compiler manually (to avoid debug switch -g)
+# Set CXXFLAGS for C++ compiler manually (to avoid debug switch -g)
 # all warnings enabled
-AC_SUBST(CXXFLAGS, "-Wall -pedantic -ansi")
+# Do not set "-pedantic" here because of known libc::argp bug in
+# combination with -Ox options. See src/Makefile.am
+AC_SUBST(CXXFLAGS, "-Wall -ansi")
 
 # *** Checks for programs.
 # C++ Compiler
@@ -52,23 +55,44 @@ AM_CONDITIONAL(OPTIMIZE, test x$optimize = xtrue)
 
 
 
-# Checks for libraries.
+# *** Checks for libraries.
 # none
-# Checks for header files.
+# *** Checks for header files.
 # none
+
 # *** Checks for typedefs, structures, and compiler characteristics.
 # none
 #AC_C_CONST
 #AC_C_INLINE
 #AC_TYPE_SIZE_T
+
+# *** Check for known argp.h bug w/ -O and -pedantic in libc(6)-dev
+# Define Test: Use C and provide the right options, change CXXFLAGS
+AC_DEFUN([AC_C_ARGP_O_PEDANTIC],
+[ AC_CACHE_CHECK( [whether argp.h works with -pedantic and -O ], [ac_cv_argp_o_pedantic],
+[  AC_LANG_PUSH(C++)
+  CXXFLAGS_org=$CXXFLAGS
+  AC_SUBST(CXXFLAGS, "-pedantic -O")
+  AC_COMPILE_IFELSE( AC_LANG_SOURCE( [[#include <argp.h>]] ),
+   ac_cv_argp_o_pedantic=yes,
+   ac_cv_argp_o_pedantic=no ) ] )
+  AC_SUBST(CXXFLAGS, $CXXFLAGS_org)
+  AC_LANG_POP(C++)
+  AM_CONDITIONAL(ARGP_O_PEDANTIC, test x$ac_cv_argp_o_pedantic = xyes)
+] )
+# Execute Test
+AC_C_ARGP_O_PEDANTIC
+
+
 # *** Checks for library functions.
 # none
 
 # *** outputting files
-# place configuration items in this file
+# Place configuration items in this file
 AC_CONFIG_HEADER([src/config.h])
-# automake Makefiles
+# Automake Makefiles
 AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile])
 
-# do output
+
+# Do output
 AC_OUTPUT

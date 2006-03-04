@@ -15,13 +15,19 @@ htinc_SOURCES = auxfunc.h \
 
 # include debugging code if wanted (DEBUG comes from configure)
 if DEBUG
-     # Debugging code, no stripping
-     htinc_CXXFLAGS = -g
+     # Debugging code, no stripping, always pedantic warnings
+     htinc_CXXFLAGS = -g -pedantic
 else
      # no debug wanted
      # turn on optimisation, if wanted
 if OPTIMIZE
-        htinc_CXXFLAGS = -O2
+if ARGP_O_PEDANTIC
+     # also add -pedantic when it's working with -Ox parameters
+     htinc_CXXFLAGS = -pedantic -O3
+else
+     # otherwise only Optimisation
+     htinc_CXXFLAGS = -O3
+endif
 endif
      # additional flags to linker: strip
      htinc_LDFLAGS = -s
