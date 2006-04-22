@@ -31,8 +31,10 @@ const char* const Copyright =
 "        robert.lange@s1999.tu-chemnitz.de, Licensed under GPL";
 
 
-// Default Include Directory: current dir
-const char* const Default_Inc_Dir = "./";
+// Default Include Directory: include/
+// Also mentioned in help text, defined in
+// parseargs.cpp::static struct argp_option
+const char* const Default_Inc_Dir = "include/";
 
 
 // HTML-Tags for the Include

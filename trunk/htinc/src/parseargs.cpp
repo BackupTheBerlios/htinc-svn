@@ -104,8 +104,9 @@ static struct argp_option options[] = {
   {"debug",    'd', 0,      0,  "Enable debug messages" },
   {"quiet",    'q', 0,      0,  "Print only error messages" },
   {"include",  'i', "incdir", 0, 
-   "directory (relative to current directory) where the include "
-    "files should be searched (with slash at the end)" },
+   "Directory (relative to current directory) where the include "
+   "files should be searched (with slash at the end). "
+   "Default is include/"  }, // globals.cpp/setup::Default_Inc_Dir
   // we automatically understand shortings of long options
   { 0 }
 };
