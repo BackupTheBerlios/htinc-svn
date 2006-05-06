@@ -3,10 +3,12 @@
 
 HTML Include handles Include files in HTML Source files. It checks
 the given source file for certain Tags (special-styled comments) and
-replace the content of the include area, if the content in the
-associated include file was changed.
+replaces the content of the include area when the associated file
+was changed.
+Besides handling includes, HTML Include also updates special Date Tags
+with the current date. Convenient for "last modification" lines.
 
-The full user manual is 'htinc.txt'
+The full user manual is 'doc/htinc.txt'
 
 
                 Obtaining
