@@ -214,6 +214,18 @@ If you want to use other Tag names then just edit the file 'main.h'
 to suit your needs before compiling HTML Include.
 
 
+			       Helpers
+			       *******
+
+Use the following command line to recursively update all html files,
+starting in the current directory:
+find . -iname \*.html -exec htinc -i include '{}' \; 
+
+The perl script "update_svn_includes.pl" calls HTML Include for all
+files which are marked as modified by Subversion.
+See the source code for more details.
+
+
 			       Credits
 			       *******
 
