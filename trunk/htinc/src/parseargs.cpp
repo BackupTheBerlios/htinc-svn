@@ -87,12 +87,12 @@ namespace {  // anonymous namespace
      
 /* program documentation. */
 static char doc[] =
-"HTML Include handles Include files in HTML Source files. It checks\n"
-"the given source file for Start and End Tags (special-styled comments) and\n"
-"replace the content of the embraced area with the content in the\n"
-"associated include file, if the content differs.\n"
+"HTML Include handles Include files and the current date in HTML files. "
+"It checks the given source files for Start and End Tags (special-styled comments) "
+"and replaces the content of the embraced area.\n"
+"For Include Tags the content of the specified file is inserted. Date Tags are filled with the "
+"current date in the format \"YYYY-MM-DD\"."
   "\v"              // separate pre-arguments text from past-arguments text
-// add doc of the Tags here?
 "Example: htinc index.html -i ../includes/\n"
 ;
      
@@ -105,7 +105,7 @@ static struct argp_option options[] = {
   {"quiet",    'q', 0,      0,  "Print only error messages" },
   {"include",  'i', "incdir", 0, 
    "Directory (relative to current directory) where the include "
-   "files should be searched (with slash at the end). "
+   "files should be searched. "
    "Default is include/"  }, // globals.cpp/setup::Default_Inc_Dir
   // we automatically understand shortings of long options
   { 0 }
