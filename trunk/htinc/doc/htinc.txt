@@ -9,10 +9,10 @@
 			  *****************
 
 HTML Include solves the problem that the Hypertext Markup Language doesn't
-knows a command for including other files into a source file.
+know a command for including other files into a source file.
 So if you use some pieces of source code (i. e. Hypertext fractions) in
-more than one file, then you need to copy the piece into every single file.
-And if you change something, then you have to manually modify all files.
+more than one file then you need to copy the piece into every single file.
+And if you change something you'll manually have to modify all files.
 But now you can delegate this task to HTML Include, which checks
 the given source file for certain Tags (special-styled comments) and
 replaces the content of the include area, if the content in the
@@ -51,8 +51,7 @@ The full-length GNU General Public License can be found in the file COPYING.
 			*********************
 
 See the separate file titled INSTALL. HTML Include uses
-autoconf/automake. So in short, you just have to type
-in the root directory
+autotools. So in short, you just have to type in the root directory
 
 './configure'	      followed by
 
@@ -94,7 +93,7 @@ lines. Thus, the following is also a valid embedded block:
 random file text
 random file text<STARTTAG><optional_parameter><STARTTAGEND>Inserted Text
 Inserted Text
-§Inserted Text<ENDTAG>random file text
+Inserted Text<ENDTAG>random file text
 random file text
 ----------------------------
 
@@ -120,10 +119,10 @@ Content: Content of the include file
 Format: Example follows
 ----------------------------
 <!--INCLUDE="body.inc"-->
-the content from body.inc will be inserted here
+The content from body.inc will be inserted here
 <!--ENDINC-->
 ----------------------------
-The Start Tag consist of two parts: '<--INCLUDE="' and '"-->'
+The Start Tag consists of two parts: '<--INCLUDE="' and '"-->'
 If this two parts are found then the text between them is parsed
 as the name of the include file (here: 'body.inc').
 The include file is finished by the End Tag: '<!--ENDINC-->'
@@ -132,7 +131,7 @@ Notes:
 It is of course possible to use paths (relative to the Include Directory)
 as Include Names, if one want to structure the used Include files over
 several directories.
-Nesting include files (i.e. Tags inside include files) is not supported.
+Nested include files (i.e. Tags inside include files) are not supported.
 
 
 			      Date Tags
@@ -164,7 +163,7 @@ the End Tag '">'
 			   Program Options
 			   ***************
 
-Usage: htinc [-h|-V] [-i include_dir] {-q} {-d} filenames
+Usage: htinc [-?] [-V] [--usage] [-i include_dir] [-q] [-d] filenames
 
 filenames: The source file(s) which should be processed
  
@@ -174,23 +173,22 @@ filenames: The source file(s) which should be processed
 
 -V/--version: Print version and exit
 
--q/-quiet: Print only error messages
+-q/--quiet: Print only error messages
 
--d/-debug: Enable debug messages
+-d/--debug: Enable debug messages
 
 -i/--include include_dir: Directory (relative to current directory) where
 	  the include files should be searched.
-          The default directory is "include/"
+          The default search directory is "include/"
 
 
 Example: "htinc index.html -i ../includes"
 
 This would process the source file index.html and look for Include files
 in the directory "../includes".
-Assume one include file is named "copyrigt.inc". Then the program
+Assume one include file is named "copyright.inc". Then the program
 would try to open the file "../includes/copyright.inc" from
-the current directory (where the program was started, not necessary the
-directory where the source file is located).
+the current directory (where the program was started).
 In the same run also all date tags are updated to the current date.
 
 
@@ -203,7 +201,7 @@ This are the Exit codes returned by HTML Include.
     1: Wrong command line parameters or options
     2: Error opening a file (source file or include file)
     3: Bad file (source file or include file)
-    4: Start Tag lacks an include file name
+    4: Missing required Tag Parameter or End Tag
    99: Internal (i. e. unexpected) error
 
 
@@ -221,8 +219,8 @@ Use the following command line to recursively update all html files,
 starting in the current directory:
 find . -iname \*.html -exec htinc -i include '{}' \; 
 
-The perl script "update_svn_includes.pl" calls HTML Include for all
-files which are marked as modified by Subversion.
+The supplied perl script "update_svn_includes.pl" calls HTML Include
+for all files which are marked as modified by Subversion.
 See the source code for more details.
 
 
