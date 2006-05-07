@@ -76,10 +76,10 @@ namespace structures {
   // Return Codes
   enum exit_codes {
     NO_ERR = 0,      // No error
-    WRONG_PARAS=1,   // wrong parameters or options
-    ERR_OPEN=2,      // error opening a file
-    BAD_FILE=3,      // bad file
-    NO_PARA_NAME=4,  // Start Tag lacks an parameter name
+    WRONG_PARAS=1,   // Wrong parameters or options
+    ERR_OPEN=2,      // Error opening a file
+    BAD_FILE=3,      // Bad file
+    TAG_ERROR=4,     // Faulty Tag
     BAKA=99          // internal (i. e. unexpected) error
   };
 

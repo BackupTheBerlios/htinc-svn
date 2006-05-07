@@ -374,13 +374,13 @@ int error_output(const structures::ret & retval) {
 
 	 << " lacks a parameter!\n\n";
     // Error: Tags invalid
-     return structures::exit_codes(structures::NO_PARA_NAME);
+     return structures::exit_codes(structures::TAG_ERROR);
      break;
   case structures::ERR_MISSING_ENDTAG:  // no End Tag
     cerr << "Error: No End-Tag found for Tag in line "<< retval.line
 	 << "!\n\n";
     // Error: Tags invalid
-     return structures::exit_codes(structures::NO_PARA_NAME);
+     return structures::exit_codes(structures::TAG_ERROR);
      break;
   case structures::ERR_LOADING_INC:  // Include could not be opened
      cerr << "Error: unable to load include File "
