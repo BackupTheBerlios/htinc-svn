@@ -27,8 +27,8 @@ namespace setup {  // Messages and Settings
 
 // Copyright message
 const char* const Copyright =
-"        " PACKAGE_STRING " - (C) 2002,2005 Robert Lange\n"
-"        robert.lange@s1999.tu-chemnitz.de, Licensed under GPL";
+"        " PACKAGE_STRING " - (C) 2002,2005,2006 Robert Lange\n"
+"        " PACKAGE_BUGREPORT ", Licensed under GPL";
 
 
 // Default Include Directory: include/

@@ -7,7 +7,7 @@
 
 # *** Initialization
 # Autoconf
-AC_INIT(HTML Include, 0.10.1devel, robert.lange@s1999.tu-chemnitz.de, htinc)
+AC_INIT(HTML Include, 0.20, robert.lange@s1999.tu-chemnitz.de, htinc)
 # where to put and find the temporary configuration files
 AC_CONFIG_AUX_DIR(config)
 # Autoconf Version not below:
