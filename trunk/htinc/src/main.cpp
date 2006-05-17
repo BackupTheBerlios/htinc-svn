@@ -259,11 +259,11 @@ struct structures::ret analysefile(const std::string &dateiname,
     // create date object
     date dt(curdate);
 
-    // Process normal date tag
+    // Process embedded date tag
     // Fill Tags structure
-    tags.start_prefix=setup::Datetag_Tag_Start_s;
-    tags.start_suffix=setup::Datetag_Tag_Start_e;
-    tags.end=setup::Datetag_Tag_End;
+    tags.start_prefix=setup::Datemeta_Tag_Start_s;
+    tags.start_suffix=setup::Datemeta_Tag_Start_e;
+    tags.end=setup::Datemeta_Tag_End;
     // do examination with date object
     retval = ex(file, dt, tags, date_changed, update);
     // check: okay?
@@ -271,11 +271,11 @@ struct structures::ret analysefile(const std::string &dateiname,
       return retval;          // not okay - bail out
     }
 
-    // Process embedded date tag
+    // Process normal date tag
     // Fill Tags structure
-    tags.start_prefix=setup::Datemeta_Tag_Start_s;
-    tags.start_suffix=setup::Datemeta_Tag_Start_e;
-    tags.end=setup::Datemeta_Tag_End;
+    tags.start_prefix=setup::Datetag_Tag_Start_s;
+    tags.start_suffix=setup::Datetag_Tag_Start_e;
+    tags.end=setup::Datetag_Tag_End;
     // do examination with date object
     retval = ex(file, dt, tags, date_changed, update);
     // check: okay?
