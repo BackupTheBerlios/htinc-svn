@@ -9,5 +9,5 @@ docdir = $(datadir)/doc/$(PACKAGE)
 
 # include in distribution
 # and install to docdir
-dist_doc_DATA = htinc.txt TODO update_svn_includes.pl \
+dist_doc_DATA = htinc.txt TODO BUGS update_svn_includes.pl \
                 ../README ../NEWS
