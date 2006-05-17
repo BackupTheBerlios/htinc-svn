@@ -111,7 +111,7 @@ struct structures::ret includes::operator() (structures::file & file,
     // else: include was changed and has to be replaced
     modified = true;    // source list will now be modified
     if (setup::Message_Level >= structures::NORMAL) {    // print modified include
-      std::cout << "   include file \""
+      std::cout << "   Include file \""
 		<< incfile
 		<< "\" was changed (modify file)\n";
     }

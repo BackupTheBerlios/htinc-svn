@@ -51,7 +51,7 @@ struct structures::ret examine::operator() (
      // Argument 3: Structures with parsing definitions
      // Argument 4: Set to true when file was changed,
      //             otherwise not touched
-     // Argument 5: Space separated Names of changed parameters
+     // Argument 5: Set to space separated Names of changed parameters
 
   // return structure
   struct structures::ret returnvalues;
@@ -151,7 +151,7 @@ struct structures::ret examine::operator() (
     removecount = std::distance(isuf, ietag);// removed characters, if changed
     returnvalues = process(f, isuf, ietag, pname, loc_changed, insertcount);
 
-    if (loc_changed == true) {  // include file was modified
+    if (loc_changed == true) {  // file was modified
       changed = true;      // save this
 
       // first of all, transmit changes to linenum object

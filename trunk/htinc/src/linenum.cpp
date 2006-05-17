@@ -30,6 +30,9 @@
 #include <algorithm>  // find
 
 // *** initialise object with character stream ***
+// Note: The current implementation is only tracks the
+//       line numbers in the ORIGINAL file - not
+//       minding the modifications
 void linenum::init(const structures::filelist_type &in) {
   // object is also cleared beforehand
 
@@ -57,7 +60,6 @@ void linenum::init(const structures::filelist_type &in) {
 
 
 // *** remove range (e.g. for changing file content) ***
-// CONT: noch komplett fehlerhaft und totaler Unsinn
 void linenum::remove(const int start, const int count) {
   // remove range (e.g. for changing file content)
      // Argument 1: Start-Position (including)

@@ -49,7 +49,7 @@ public:
      // Argument 3: Structures with parsing definitions
      // Argument 4: Set to true when file was changed,
      //             otherwise not touched
-     // Argument 5: Space separated Names of changed parameters
+     // Argument 5: Set to space separated Names of changed parameters
 
 
 

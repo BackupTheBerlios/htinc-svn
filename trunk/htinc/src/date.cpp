@@ -58,7 +58,7 @@ struct structures::ret date::operator() (structures::file & file,
 
     if (!changed) {  // identical
       if (setup::Message_Level >= structures::DEBUG) {    // Debug
-	std::cout << "Debug (I): date string was not modified\n";
+	std::cout << "Debug (D): date string was not modified\n";
       }
       returnvalues.val = structures::OK;     // everything OK
       return returnvalues;       // and go back
