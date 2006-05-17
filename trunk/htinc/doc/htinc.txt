@@ -11,14 +11,15 @@
 HTML Include solves the problem that the Hypertext Markup Language doesn't
 know a command for including other files into a source file.
 So if you use some pieces of source code (i. e. Hypertext fractions) in
-more than one file then you need to copy the piece into every single file.
+more than one file, you need to copy the piece into every single file.
 And if you change something you'll manually have to modify all files.
 But now you can delegate this task to HTML Include, which checks
 the given source file for certain Tags (special-styled comments) and
-replaces the content of the include area, if the content in the
+replaces the content of the include area, when the content in the
 associated include file was changed.
 As a bonus, it also writes the current date to the "last
-modification" line which you usually forget (or do not bother) to update.
+modification" line and brower meta, which you usually forget
+(or do not bother) to update.
 
 
 			       License
