@@ -8,7 +8,7 @@
 <meta name="description" content="HTML Include Homepage">
 <meta name="author" content="Robert Lange">
 <meta name="keywords" content="HTML Include, htinc, include, web development">
-<meta name="date" content="2005-04-08">
+<meta name="date" content="2006-05-13">
 <!-- META f&uuml;r Browser -->
 <!--INCLUDE="browser_metas.inc"-->
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -20,14 +20,13 @@
 </title>
 </head>
 
-<!--INCLUDE="bodytag.inc"-->
-<body>
+<!--INCLUDE="bodytag.inc"--><body>
 <!--ENDINC-->
 
 <!-- Titel -->
 <div style="text-align:center">
 <h1>HTML Include</h1>
-<h2 style="margin-top:0em;">Version 0.10</h2>
+<h2 style="margin-top:0em;">Version 0.20</h2>
 </div>
 
 
@@ -36,23 +35,44 @@
 
 <p>HTML Include solves the problem that the Hypertext Markup Language doesn't
 know a command for including other files into a source file.
-So if use some pieces of source code (i. e. Hypertext fractions)
-in more than one file than you need to copy the piece into every single file.
-And if you change something, than you have to manually modify all files
-(that is, if you do not have any type of special editor which handles
-this for you).
-But now you can delegate this task to HTML Include which checks
+So if you use some pieces of source code (i. e. Hypertext fractions) in
+more than one file, you need to copy the piece into every single file.
+And if you change something you'll manually have to modify all files.
+But now you can delegate this task to HTML Include, which checks
 the given source file for certain Tags (special-styled comments) and
-replace the content of the include area, if the content in the
-      associated include file was changed.<br>
-<span style="font-size:smaller;font-style:italic">Taken from the
+replaces the content of the include area, when the content in the
+associated include file was changed.<br>
+As a bonus, it also writes the current date to the "last
+modification" line and brower meta, which you usually forget
+(or do not bother) to update.<br>
+<span class="citesrc">Taken from the
 	HTML Include documentation.</span></p>
 
 <p>If you want to see an example, just examine this page in any text
-      editor and look for comments with the text &quot;INCLUDE&quot; and
-      &quot;ENDINC&quot; in them. You can also see the content fo the <a
+      editor and look for comments with the text &quot;INCLUDE&quot;,
+      &quot;INCLUDEDATE&quot; and
+      &quot;ENDINC&quot; in them. You can also see the content of the <a
 	href="include/">included</a> files and the <a
 	href="run_htinc.sh">run-script</a> for HTML Include.</p>
+
+<p>The <a href="http://svn.berlios.de/svnroot/repos/htinc/trunk/htinc/doc/htinc.txt">full documentation</a>
+is available in the Subversion repository. Please note that this version is possibly
+newer than the latest release.</p>
+
+<h2>Who would need this?</h2>
+
+<p>From the author's point of view HTML Include is of good use for people
+who have their own plain-HTML web pages, which they also change from
+time to time. They would use an text editor instead of an Web
+Development System which probably already implement the features
+HTML Include provides.
+
+<p>Of course HTML Include cannot compete with a full
+grown Content Management System, but on the other hand is mastered
+in half an hour.<br>
+And it allows you to reuse code in multiple files as well as
+keep the modification date up-to-date.</p>
+
 
 <h2>Get it from BerliOS!</h2>
 
@@ -66,6 +86,8 @@ There you can find further information and download
 <!--BerliOS Logo-->
 <a href="http://developer.berlios.de" title="BerliOS Developer"> <img src="http://developer.berlios.de/bslogo.php?group_id=2797" width="124px" height="32px" border="0" alt="BerliOS Developer Logo"></a>
 
+<p>Also a <a href="http://freshmeat.net/projects/htinc/">Freshmeat record</a>
+for HTML Include is available.</p>
 
 <h2>How to retrieve HTML Include from SVN</h2>
 
@@ -89,44 +111,13 @@ SVN commands without the URL. For example:
 <BR>
 <B><I>svn status</I></B></li>
 </UL>
-<span style="font-size:smaller;font-style:italic">Taken from
-      BerliOS' <a href="https://developer.berlios.de/docman/display_doc.php?docid=394&amp;group_id=2">Subversion (SVN) HowTo</a>.</span>
-
-
-<!--
-<h2>Current Activity</h2>
-<ul>
-      <li>Create initial release</li>
-</ul>
-//-->
-
-<h2>Things to do</h2>
-<p>My personal list of things I want to change in HTML Include over the next
-      time.</p>
-
-<ul>
-<li>I did not touched the program for over 2 years, so I want to overwork
-	it at several places.</li>
-<li>Finally I want to implement something new: For long time I am
-	bothered that I cannot automatically update the &quot;last
-	modification&quot;-Line (along with the associated
-	META-Tag). If I add a &quot;date&quot;-type of tag to HTML
-	Include, it could do the task for me.
-</li>
-</ul>
-
-<h2>Things done</h2>
-<p>And checked into the Subversion repository</p>
-<ul>
-<li>Made HTML Include use automake/autoconf</li>
-<li>Use argp from the libc for command line parsing</li>
-</ul>
+<span class="citesrc">Taken from
+      BerliOS' <a href="http://developer.berlios.de/docman/display_doc.php?docid=394&amp;group_id=2">Subversion (SVN) HowTo</a>.</span>
 
 
 <!-- Footer: Ende und Autor -->
 <div style="margin-top:1em">
-<!--INCLUDE="sepline.inc"-->
-<hr width="95%" align=center style="margin-bottom:10px;">
+<!--INCLUDE="sepline.inc"--><hr width="95%" align=center style="margin-bottom:10px;">
 <!--ENDINC-->
 <table align=center width="95%">
   <tr valign=top>
@@ -136,7 +127,7 @@ SVN commands without the URL. For example:
           src="http://www.w3.org/Icons/valid-html40"
           alt="Valid HTML 4.0!" height="31" width="88"></a>
     </td>
-    <td align=right>last modification: 2005-04-08</td>
+    <td align=right>last modification: <!--INCLUDEDATE-->2006-05-13<!--ENDINC--></td>
   </tr>
 </table></div>
 

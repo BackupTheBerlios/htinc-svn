@@ -5,6 +5,7 @@ span.tblct {color:#FF66FF;font-style:italic;font-size:105%;}       /* Tabellenüb
          /* unteren Ramen */
 td.subram {border-bottom-width:2px;border-bottom-style:solid;border-color:#FFFFFF;padding-bottom:10px;}
 div.nabs {margin-bottom:2mm;}                                        /* neuer Absatz */
+span.citesrc {font-size:smaller;font-style:italic;}  /* Citation Sources */
 /* ul {position:relative;top:-1.5ex;} */
        /* Aufzählungslisten */
 li {margin-bottom:1ex;}  /* Listelemente */
