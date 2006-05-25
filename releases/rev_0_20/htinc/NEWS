@@ -1,0 +1,18 @@
+                      HTML Include History
+                      ====================
+
+Version 0.20
+   - Added Current Date Replacement for both Custom Tag
+     and Browser Meta Line
+   - Tags are now allowed to appear anywhere
+     in the text, not only on single lines
+   - Process multiple input files
+   - Autoconfiscated package
+
+Version 0.10
+   - Imported into BerliOS' SVN
+
+
+
+last changed rev: $LastChangedRevision$
+last modified: $LastChangedDate$

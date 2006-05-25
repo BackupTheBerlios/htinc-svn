@@ -1,0 +1,11 @@
+Known Bugs
+**********
+
+- The line number printed in the message
+  "Updated date entry in line XX" is wrong when in include files
+  the number of newline characters has changed
+  - Source: The linenum object is implemented in that way that
+    it prints the line number from the original file. When HTML
+    include aborts (does not change the file) then the error is
+    found in the correct line. This implementation is not valid
+    anymore when the file is successfully processed.

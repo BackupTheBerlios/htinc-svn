@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/strict.dtd">
+
+<html>
+<head>
+<!-- META f&uuml;r Suchdienste -->
+
+<meta name="description" content="HTML Include Homepage">
+<meta name="author" content="Robert Lange">
+<meta name="keywords" content="HTML Include, htinc, include, web development">
+<meta name="date" content="2006-05-13">
+<!-- META f&uuml;r Browser -->
+<!--INCLUDE="browser_metas.inc"-->
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel=stylesheet type="text/css" href="styles.css">
+<!--ENDINC-->
+
+<title>HTML Include
+</title>
+</head>
+
+<!--INCLUDE="bodytag.inc"--><body>
+<!--ENDINC-->
+
+<!-- Titel -->
+<div style="text-align:center">
+<h1>HTML Include</h1>
+<h2 style="margin-top:0em;">Version 0.20</h2>
+</div>
+
+
+
+<h2>Overview</h2>
+
+<p>HTML Include solves the problem that the Hypertext Markup Language doesn't
+know a command for including other files into a source file.
+So if you use some pieces of source code (i. e. Hypertext fractions) in
+more than one file, you need to copy the piece into every single file.
+And if you change something you'll manually have to modify all files.
+But now you can delegate this task to HTML Include, which checks
+the given source file for certain Tags (special-styled comments) and
+replaces the content of the include area, when the content in the
+associated include file was changed.<br>
+As a bonus, it also writes the current date to the "last
+modification" line and brower meta, which you usually forget
+(or do not bother) to update.<br>
+<span class="citesrc">Taken from the
+	HTML Include documentation.</span></p>
+
+<p>If you want to see an example, just examine this page in any text
+      editor and look for comments with the text &quot;INCLUDE&quot;,
+      &quot;INCLUDEDATE&quot; and
+      &quot;ENDINC&quot; in them. You can also see the content of the <a
+	href="include/">included</a> files and the <a
+	href="run_htinc.sh">run-script</a> for HTML Include.</p>
+
+<p>The <a href="http://svn.berlios.de/svnroot/repos/htinc/trunk/htinc/doc/htinc.txt">full documentation</a>
+is available in the Subversion repository. Please note that this version is possibly
+newer than the latest release.</p>
+
+<h2>Who would need this?</h2>
+
+<p>From the author's point of view HTML Include is of good use for people
+who have their own plain-HTML web pages, which they also change from
+time to time. They would use an text editor instead of an Web
+Development System which probably already implement the features
+HTML Include provides.
+
+<p>Of course HTML Include cannot compete with a full
+grown Content Management System, but on the other hand is mastered
+in half an hour.<br>
+And it allows you to reuse code in multiple files as well as
+keep the modification date up-to-date.</p>
+
+
+<h2>Get it from BerliOS!</h2>
+
+<p>
+The HTML Include project page is hosted at BerliOS:
+<a href="http://developer.berlios.de/projects/htinc/">
+http://developer.berlios.de/projects/htinc/</a>.
+There you can find further information and download
+      the latest release.</p>
+
+<!--BerliOS Logo-->
+<a href="http://developer.berlios.de" title="BerliOS Developer"> <img src="http://developer.berlios.de/bslogo.php?group_id=2797" width="124px" height="32px" border="0" alt="BerliOS Developer Logo"></a>
+
+<p>Also a <a href="http://freshmeat.net/projects/htinc/">Freshmeat record</a>
+for HTML Include is available.</p>
+
+<h2>How to retrieve HTML Include from SVN</h2>
+
+<p>HTML Include is developed using the Subversion repository of
+      BerliOS (therefore you cannot find any files in the CVS-area of
+      this project, in case you wondered). Subversion is a version
+      control system designed to be superior and eventually replace
+      CVS. Their home page is located at
+<a href="http://subversion.tigris.org">http://subversion.tigris.org</a>
+      in case you want to find out more about it.</p>
+
+<p>If you want to retrieve the latest developer version of HTML
+      Include, here is the instruction how to get it from the
+      Subversion repository:</p>
+<UL>
+<LI>Type the following:
+<BR><B><I>svn checkout svn://svn.berlios.de/htinc/trunk/htinc</I></B>
+</li>
+<LI>After initial checkout, you can change into this directory and execute
+SVN commands without the URL. For example:
+<BR>
+<B><I>svn status</I></B></li>
+</UL>
+<span class="citesrc">Taken from
+      BerliOS' <a href="http://developer.berlios.de/docman/display_doc.php?docid=394&amp;group_id=2">Subversion (SVN) HowTo</a>.</span>
+
+
+<!-- Footer: Ende und Autor -->
+<div style="margin-top:1em">
+<!--INCLUDE="sepline.inc"--><hr width="95%" align=center style="margin-bottom:10px;">
+<!--ENDINC-->
+<table align=center width="95%">
+  <tr valign=top>
+    <td align=left>page constructed by <a href="mailto:robert.lange@s1999.tu-chemnitz.de">rola</a></td>
+    <td align=center width=100>
+	      <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fhtinc.berlios.de"><img style="border-width:0"
+          src="http://www.w3.org/Icons/valid-html40"
+          alt="Valid HTML 4.0!" height="31" width="88"></a>
+    </td>
+    <td align=right>last modification: <!--INCLUDEDATE-->2006-05-13<!--ENDINC--></td>
+  </tr>
+</table></div>
+
+</body>
+</html>

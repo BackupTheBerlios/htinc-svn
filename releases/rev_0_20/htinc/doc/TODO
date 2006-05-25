@@ -1,0 +1,21 @@
+Open Points
+***********
+
+- write man page
+
+- work on bugs
+
+- add command line to select which modules (include, date) should
+  be active
+
+- only update the date tag when it differs from
+  the file modification time (or any other update by htinc
+  took place)
+
+- specify more than one include directory on command line
+
+- extend automake's uninstall target to also remove empty directories
+
+- work on TODO's in source code
+
+$LastChangedDate$

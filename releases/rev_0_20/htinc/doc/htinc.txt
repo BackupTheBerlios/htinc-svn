@@ -1,0 +1,245 @@
+			     HTML Include
+			     ============
+			     Version 0.20
+
+
+
+
+			  Short Description
+			  *****************
+
+HTML Include solves the problem that the Hypertext Markup Language doesn't
+know a command for including other files into a source file.
+So if you use some pieces of source code (i. e. Hypertext fractions) in
+more than one file, you need to copy the piece into every single file.
+And if you change something you'll manually have to modify all files.
+But now you can delegate this task to HTML Include, which checks
+the given source file for certain Tags (special-styled comments) and
+replaces the content of the include area, when the content in the
+associated include file was changed.
+As a bonus, it also writes the current date to the "last
+modification" line and brower meta, which you usually forget
+(or do not bother) to update.
+
+
+			       License
+			       *******
+
+HTML Include is put under the GNU General Public License.
+
+    HTML Include
+    Copyright (C) 2002,2005,2006 Robert Lange
+    robert.lange@s1999.tu-chemnitz.de
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+The full-length GNU General Public License can be found in the file COPYING.
+
+
+			Building HTML Include
+			*********************
+
+See the separate file titled INSTALL. HTML Include uses
+autotools. So in short, you just have to type in the root directory
+
+'./configure'	      followed by
+
+'make'		      and
+
+'make install'	      to configure, build and install the package.
+
+The installation directory and several other things can be changed at
+the run of configure. Just issue './configure --help' to get a list of
+all the things you want (or maybe don't want) to know.
+
+If you do not want to install the whole package just copy the
+executable "src/htinc" (and maybe the documentation files under doc/)
+to any location you like.
+
+
+		       Usage and Tag Structure
+		       ***********************
+
+Call HTML Include with the file(s) to process, optionally specify a
+different include search path. The program then scans the input files
+and performs both include and date updates.
+
+The file portions to repace are marked with so-called Tags, which are
+embedded in the file. Tags can require a parameter, e.g. the
+include file name for Include Tags.
+The basic structure is the following:
+----------------------------
+random file text
+<STARTTAG><optional_parameter><STARTTAGEND>
+Inserted Text
+<ENDTAG>
+random file text
+----------------------------
+
+Tags can appear anywhere in the text, not necessarily on separate
+lines. Thus, the following is also a valid embedded block:
+----------------------------
+random file text
+random file text<STARTTAG><optional_parameter><STARTTAGEND>Inserted Text
+Inserted Text
+Inserted Text<ENDTAG>random file text
+random file text
+----------------------------
+
+
+The following sections explain both implemented tag types:
+Include Tags and Date Tags
+Currently always both tags are updated, there is not way to disable
+one method. But this is fast to implement, when somebody requests it.
+
+
+			     Include Tags
+			     ************
+
+Purpose: Include other files
+
+Parameter: Required, Include file name
+The include file is searched in the include directory specified on the
+command line. The path is interpreted relative to the directory where HTML
+Include was called from.
+
+Content: Content of the include file
+
+Format: Example follows
+----------------------------
+<!--INCLUDE="body.inc"-->
+The content from body.inc will be inserted here
+<!--ENDINC-->
+----------------------------
+The Start Tag consists of two parts: '<--INCLUDE="' and '"-->'
+If this two parts are found then the text between them is parsed
+as the name of the include file (here: 'body.inc').
+The include file is finished by the End Tag: '<!--ENDINC-->'
+
+Notes:
+It is of course possible to use paths (relative to the Include Directory)
+as Include Names, if one want to structure the used Include files over
+several directories.
+Nested include files (i.e. Tags inside include files) are not supported.
+
+
+			      Date Tags
+			      *********
+
+Purpose: Update Date
+
+Parameter: None
+
+Content: Current date in the format YYYY-MM-DD
+
+Format, Normal: Example follows
+----------------------------
+<!--INCLUDEDATE-->2006-05-03<!--ENDINC-->
+----------------------------
+The Start Tag is '<!--INCLUDEDATE-->' and
+the End Tag '<!--ENDINC-->'
+Between both tags the current date is inserted.
+
+Format, Meta: Example follows
+----------------------------
+<meta name="date" content="2006-05-03">
+----------------------------
+Beside the user defined tag from above also the meta line for browers
+is updated. Here the Start Tag is '<meta name="date" content="' and
+the End Tag '">'
+
+
+			   Program Options
+			   ***************
+
+Usage: htinc [-?] [-V] [--usage] [-i include_dir] [-q] [-d] filenames
+
+filenames: The source file(s) which should be processed
+ 
+--usage: Short usage message
+ 
+-?/--help: Show the help screen and exit
+
+-V/--version: Print version and exit
+
+-q/--quiet: Print only error messages
+
+-d/--debug: Enable debug messages
+
+-i/--include include_dir: Directory (relative to current directory) where
+	  the include files should be searched.
+          The default search directory is "include/"
+
+
+Example: "htinc index.html -i ../includes"
+
+This would process the source file index.html and look for Include files
+in the directory "../includes".
+Assume one include file is named "copyright.inc". Then the program
+would try to open the file "../includes/copyright.inc" from
+the current directory (where the program was started).
+In the same run also all date tags are updated to the current date.
+
+
+			     Return Codes
+			     ************
+
+This are the Exit codes returned by HTML Include.
+
+    0: No Errors
+    1: Wrong command line parameters or options
+    2: Error opening a file (source file or include file)
+    3: Bad file (source file or include file)
+    4: Missing required Tag Parameter or End Tag
+   99: Internal (i. e. unexpected) error
+
+
+			  Tricks, no Treats
+			  *****************
+
+If you want to use other Tag names then just edit the file 'main.h'
+to suit your needs before compiling HTML Include.
+
+
+			       Helpers
+			       *******
+
+Use the following command line to recursively update all html files,
+starting in the current directory:
+find . -iname \*.html -exec htinc -i include '{}' \; 
+
+The supplied perl script "update_svn_includes.pl" calls HTML Include
+for all files which are marked as modified by Subversion.
+See the source code for more details.
+
+
+			       Credits
+			       *******
+
+The Author can be reached by mailing to robert.lange@s1999.tu-chemnitz.de
+Questions, Proposals, feature wishes, something else? Just write me.
+
+HTML Include is hosted at BerliOS (developer.berlios.de) in a
+subversion repository.
+
+The idea of the Include file handling orginates from the program
+HTML EDITOR PHASE 5² (C) Ulli Meybohm (www.meybohm.de/htmledit/); an
+'IDE' for editing Hypertext Markup code.
+
+
+
+
+last changed rev: $LastChangedRevision$
+last modified: $LastChangedDate$
